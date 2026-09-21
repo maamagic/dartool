@@ -12,11 +12,13 @@
 library;
 
 export 'src/collection_util.dart';
+export 'src/codec_util.dart';
 export 'src/color_util.dart';
 export 'src/convert_util.dart';
 export 'src/crypto_util.dart';
 export 'src/date_util.dart';
 export 'src/enum_util.dart';
+export 'src/event_bus.dart';
 export 'src/extensions/datetime_ext.dart';
 export 'src/extensions/duration_ext.dart';
 export 'src/extensions/iterable_ext.dart';
@@ -39,6 +41,7 @@ export 'src/regex_util.dart';
 export 'src/result.dart';
 export 'src/retry_util.dart';
 export 'src/str_util.dart';
+export 'src/throttle_util.dart';
 export 'src/timer_util.dart';
 export 'src/url_util.dart';
 export 'src/validate_util.dart';

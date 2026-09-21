@@ -7,6 +7,7 @@ extension DartoolDateTime on DateTime {
   bool get isTomorrow => DateUtil.isTomorrow(this);
   bool get isThisMonth => DateUtil.isThisMonth(this);
   bool get isThisYear => DateUtil.isThisYear(this);
+
   bool isSameDayAs(DateTime other) => DateUtil.isSameDay(this, other);
   bool isSameMonthAs(DateTime other) => DateUtil.isSameMonth(this, other);
 
@@ -16,6 +17,13 @@ extension DartoolDateTime on DateTime {
 
   DateTime get startOfDay => DateUtil.startOfDay(this);
   DateTime get endOfDay => DateUtil.endOfDay(this);
+  DateTime get firstDayOfMonth => DateTime(year, month, 1);
+  DateTime get lastDayOfMonth {
+    final nextMonth = month == 12
+        ? DateTime(year + 1, 1, 1)
+        : DateTime(year, month + 1, 1);
+    return nextMonth.subtract(const Duration(days: 1));
+  }
 
   DateTime addDays(int days) => DateUtil.addDays(this, days);
   DateTime addMonths(int months) => DateUtil.addMonths(this, months);
@@ -44,8 +52,11 @@ extension DartoolDateTime on DateTime {
 
   String format([String pattern = DateUtil.defaultPattern]) =>
       DateUtil.format(this, pattern);
+
   String relativeTime({DateTime? now}) => DateUtil.relativeTime(this, now: now);
+
   String get weekdayName => DateUtil.weekdayName(this);
+
   int toTimestamp({bool millis = false}) =>
       DateUtil.toTimestamp(this, millis: millis);
 }

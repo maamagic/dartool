@@ -10,6 +10,7 @@ export 'src/crypto_util.dart';
 export 'src/csv_util.dart';
 export 'src/date_util.dart';
 export 'src/enum_util.dart';
+export 'src/exception_util.dart';
 export 'src/event_bus.dart';
 export 'src/extensions/datetime_ext.dart';
 export 'src/extensions/duration_ext.dart';

@@ -11,7 +11,9 @@
 library;
 
 export 'src/collection_util.dart';
+export 'src/color_util.dart';
 export 'src/convert_util.dart';
+export 'src/crypto_util.dart';
 export 'src/date_util.dart';
 export 'src/enum_util.dart';
 export 'src/id_util.dart';

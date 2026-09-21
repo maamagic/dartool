@@ -14,3 +14,4 @@ library;
 
 export 'src/log_util.dart';
 export 'src/platform_util.dart';
+export 'src/widget_util.dart';

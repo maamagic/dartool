@@ -1,6 +1,5 @@
-/// 操作结果容器，在"值 + 错误信息"上封装成功/失败语义。
-///
-/// 用于方法显式返回成功或失败，避免用异常表达可预期的失败分支。
+/// Result container that wraps "value + error" into explicit success /
+/// failure semantics. Prevents using exceptions for expected failure branches.
 class Result<T> {
   Result._(this._value, this._message, this._error, this._isSuccess);
 
@@ -9,32 +8,33 @@ class Result<T> {
   final Object? _error;
   final bool _isSuccess;
 
-  /// 成功结果。
+  /// Successful result.
   factory Result.success(T value) => Result<T>._(value, null, null, true);
 
-  /// 失败结果，携带可读信息与可选底层错误。
+  /// Failed result with a human-readable [message] and optional underlying
+  /// [error].
   factory Result.failure(String message, [Object? error]) =>
       Result<T>._(null, message, error, false);
 
-  /// 是否成功。
+  /// Whether this result represents success.
   bool get isSuccess => _isSuccess;
 
-  /// 是否失败。
+  /// Whether this result represents failure.
   bool get isFailure => !_isSuccess;
 
-  /// 成功时的值（失败时为 `null`）。
+  /// The wrapped value (`null` on failure).
   T? get value => _value;
 
-  /// 失败信息（成功时为 `null`）。
+  /// Failure message (`null` on success).
   String? get message => _message;
 
-  /// 底层错误对象（可选）。
+  /// Optional underlying error object.
   Object? get error => _error;
 
-  /// 取值；失败时返回 [fallback]。
+  /// Returns the wrapped value, or [fallback] on failure.
   T getOrElse(T fallback) => _isSuccess ? _value as T : fallback;
 
-  /// 取值；失败时抛 [StateError]。
+  /// Returns the wrapped value; throws [StateError] on failure.
   T getOrThrow() {
     if (!_isSuccess) {
       throw StateError(_message ?? 'Result is failure');
@@ -42,26 +42,26 @@ class Result<T> {
     return _value as T;
   }
 
-  /// 成功时变换值，失败时保持失败。
+  /// Transform the value on success; stays unchanged on failure.
   Result<R> map<R>(R Function(T) mapper) => _isSuccess
       ? Result<R>.success(mapper(_value as T))
       : Result<R>._(null, _message, _error, false);
 
-  /// 失败时用 [mapper] 改写错误信息，成功时保持原值不变。
+  /// Transform the failure message; stays unchanged on success.
   Result<T> mapFailure(String Function(String message) mapper) =>
       _isSuccess ? this : Result<T>.failure(mapper(_message ?? ''), _error);
 
-  /// 成功时执行 [action]。
+  /// Run [action] on success.
   void ifSuccess(void Function(T) action) {
     if (_isSuccess) action(_value as T);
   }
 
-  /// 失败时执行 [action]。
+  /// Run [action] on failure.
   void ifFailure(void Function(String message) action) {
     if (!_isSuccess) action(_message ?? '');
   }
 
-  /// 折叠：成功走 [onSuccess]，失败走 [onFailure]。
+  /// Fold: invoke [onSuccess] on success, [onFailure] on failure.
   R fold<R>(R Function(T) onSuccess, R Function(String message) onFailure) =>
       _isSuccess ? onSuccess(_value as T) : onFailure(_message ?? '');
 

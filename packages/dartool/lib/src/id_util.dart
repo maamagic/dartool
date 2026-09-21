@@ -1,27 +1,26 @@
 import 'dart:math';
 
-/// ID 生成工具类。
-///
-/// 零第三方依赖实现 UUID v4、短随机 ID 与雪花 ID。
+/// ID generation utilities: UUID v4, short random IDs and Snowflake IDs,
+/// all with zero third-party dependencies.
 abstract final class IdUtil {
   IdUtil._();
 
   static final Random _random = Random.secure();
 
-  /// 生成 UUID v4（带连字符，小写）。
+  /// Generate a UUID v4 (with hyphens, lowercase).
   static String uuid() {
     final b = List<int>.generate(16, (_) => _random.nextInt(256));
-    b[6] = (b[6] & 0x0f) | 0x40; // version 4
-    b[8] = (b[8] & 0x3f) | 0x80; // variant 10xx
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
     final hex = b.map((x) => x.toRadixString(16).padLeft(2, '0')).join();
     return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-'
         '${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}';
   }
 
-  /// 生成无连字符的 UUID v4（32 位十六进制）。
+  /// UUID v4 without hyphens (32 hex characters).
   static String simpleUuid() => uuid().replaceAll('-', '');
 
-  /// 从 [charset] 中随机生成 [length] 位 ID。
+  /// Random ID of [length] characters chosen from [charset].
   static String randomId(
     int length, {
     String charset =
@@ -35,43 +34,43 @@ abstract final class IdUtil {
     return sb.toString();
   }
 
-  /// 创建一个雪花 ID 生成器（[workerId] 取值 0..1023）。
+  /// Create a Snowflake ID generator ([workerId] in 0..1023).
   static SnowflakeIdGenerator snowflake({int workerId = 0}) =>
       SnowflakeIdGenerator(workerId: workerId);
 }
 
-/// 雪花 ID 生成器。
+/// Snowflake ID generator.
 ///
-/// 64 位 ID：41 位毫秒时间戳 + 10 位机器 ID + 12 位自增序列。
-/// 单机单调递增、趋势递增，适合作为分布式主键。
+/// 64-bit ID layout: 41-bit millisecond timestamp + 10-bit worker ID +
+/// 12-bit auto-incrementing sequence. Monotonically increasing on a
+/// single node; well suited as a distributed primary key.
 class SnowflakeIdGenerator {
-  /// [workerId] 范围 0..1023。
+  /// [workerId] must be in 0..1023.
   SnowflakeIdGenerator({this.workerId = 0}) {
     if (workerId < 0 || workerId > maxWorkerId) {
       throw ArgumentError.value(workerId, 'workerId', 'must be 0..1023');
     }
   }
 
-  /// 机器 ID。
+  /// Worker identifier.
   final int workerId;
 
-  /// 机器 ID 最大值（10 位）。
+  /// Maximum worker ID (10 bits).
   static const int maxWorkerId = 1023;
 
   static const int _sequenceBits = 12;
   static const int _workerShift = _sequenceBits;
   static const int _timestampShift = _sequenceBits + 10;
   static const int _sequenceMask = (1 << _sequenceBits) - 1;
-  static const int _epoch = 1288834974657; // Twitter snowflake epoch
+  static const int _epoch = 1288834974657;
 
   int _lastTimestamp = -1;
   int _sequence = 0;
 
-  /// 生成下一个 ID。
+  /// Generate the next ID.
   int nextId() {
     var ts = DateTime.now().millisecondsSinceEpoch;
     if (ts < _lastTimestamp) {
-      // 简单时钟回拨处理：等待追平
       ts = _lastTimestamp;
     }
     if (ts == _lastTimestamp) {

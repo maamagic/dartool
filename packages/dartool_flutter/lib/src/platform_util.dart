@@ -2,37 +2,37 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 
-/// 平台判断工具类。
+/// Platform detection helpers.
 ///
-/// 在 `dart:io` 的 [Platform] 基础上统一封装，并正确处理 Web 环境
-/// （Web 下 `dart:io` 不可用，统一走 `kIsWeb` 判断）。
+/// Wraps `dart:io`'s [Platform] with correct handling for Web (where
+/// `dart:io` is unavailable) via [kIsWeb].
 abstract final class PlatformUtil {
   PlatformUtil._();
 
-  /// 是否运行在 Web。
+  /// Whether running on the Web.
   static bool get isWeb => kIsWeb;
 
-  /// 是否 Android。
+  /// Whether running on Android.
   static bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
-  /// 是否 iOS。
+  /// Whether running on iOS.
   static bool get isIOS => !kIsWeb && Platform.isIOS;
 
-  /// 是否 macOS。
+  /// Whether running on macOS.
   static bool get isMacOS => !kIsWeb && Platform.isMacOS;
 
-  /// 是否 Windows。
+  /// Whether running on Windows.
   static bool get isWindows => !kIsWeb && Platform.isWindows;
 
-  /// 是否 Linux。
+  /// Whether running on Linux.
   static bool get isLinux => !kIsWeb && Platform.isLinux;
 
-  /// 是否移动端（Android / iOS）。
+  /// Whether running on a mobile platform (Android / iOS).
   static bool get isMobile => isAndroid || isIOS;
 
-  /// 是否桌面端（Windows / macOS / Linux）。
+  /// Whether running on a desktop platform (Windows / macOS / Linux).
   static bool get isDesktop => isWindows || isMacOS || isLinux;
 
-  /// 当前目标平台（对 Web / 桌面同样安全）。
+  /// Current target platform (safe for Web and desktop alike).
   static TargetPlatform get targetPlatform => defaultTargetPlatform;
 }

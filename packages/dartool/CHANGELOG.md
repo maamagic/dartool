@@ -10,6 +10,8 @@
 - Added dartdoc comments for `ConvertUtil` and `ValidateUtil` classes.
 - Fixed incorrect API calls in examples and README (`CollectionUtil.distinct`,
   `Optional.getOrElse`).
+- Added `ColorUtil` (color conversion / luminance / interpolation).
+- Added `CryptoUtil` (Base64 / Hex / MD5 / SHA / HMAC / XOR).
 
 ## 0.1.0-dev.1 - 2026-09-21
 
@@ -21,9 +23,7 @@
 
 ### Initial setup
 
-- Melos monorepo workspace with `dartool` (pure-Dart core) and
-  `dartool_flutter` (Flutter extensions).
+- Melos monorepo workspace.
 - Core modules: `StrUtil`, `CollectionUtil`, `DateUtil`, `RegexUtil`,
   `EnumUtil`, `ValidateUtil`, `ConvertUtil`, `IdUtil`, `Optional`, `Result`.
-- Flutter modules: `PlatformUtil`, `LogUtil`.
 - Unit tests, GitHub Actions CI and pana scoring configured.

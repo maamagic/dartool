@@ -1,14 +1,9 @@
-/// 数据校验工具类。
-///
-/// 复用 [StrUtil] / [RegexUtil] 的判定，并提供抛异常的强制校验方法，
-/// 适合在方法入口做参数防御。
-library;
+import 'package:dartool/src/regex_util.dart';
+import 'package:dartool/src/str_util.dart';
 
-import 'regex_util.dart';
-import 'str_util.dart';
-
-/// Data validation utilities for common use cases: null checks, string
-/// blank checks, email / phone / URL / ID card validation, range checks, etc.
+/// Data validation utilities: null / blank checks, email / phone / URL /
+/// ID card format checks, range / length checks, and mandatory
+/// [require] assertions.
 ///
 /// Example:
 /// ```dart
@@ -20,46 +15,46 @@ import 'str_util.dart';
 abstract final class ValidateUtil {
   ValidateUtil._();
 
-  /// 值是否为 `null`。
+  /// Whether [v] is `null`.
   static bool isNull(Object? v) => v == null;
 
-  /// 值是否非 `null`。
+  /// Whether [v] is NOT `null`.
   static bool isNotNull(Object? v) => v != null;
 
-  /// 强制值非空，否则抛 [ArgumentError]。
+  /// Assert [v] is non-null; throws [ArgumentError] otherwise.
   static void notNull(Object? v, [String? name]) {
     if (v == null) throw ArgumentError.notNull(name ?? 'value');
   }
 
-  /// 字符串是否空白。
+  /// Whether [v] is blank (null / empty / whitespace only).
   static bool isBlank(String? v) => StrUtil.isBlank(v);
 
-  /// 字符串是否非空白。
+  /// Whether [v] is non-blank.
   static bool isNotBlank(String? v) => StrUtil.isNotBlank(v);
 
-  /// 是否邮箱。
+  /// Whether [v] is an email.
   static bool isEmail(String v) => RegexUtil.isEmail(v);
 
-  /// 是否中国大陆手机号。
+  /// Whether [v] is a Mainland China mobile number.
   static bool isPhone(String v) => RegexUtil.isPhone(v);
 
-  /// 是否 URL。
+  /// Whether [v] is a URL.
   static bool isUrl(String v) => RegexUtil.isUrl(v);
 
-  /// 是否中国居民身份证（格式校验）。
+  /// Whether [v] is a Mainland China ID card (format only).
   static bool isIdCard(String v) => RegexUtil.isIdCard(v);
 
-  /// 是否数字字符串。
+  /// Whether [v] is a numeric string.
   static bool isNumeric(String v) => StrUtil.isNumeric(v);
 
-  /// 数值是否在闭区间 `[min, max]` 内。
+  /// Whether [v] is within the closed interval `[min, max]`.
   static bool inRange(num v, num min, num max) => v >= min && v <= max;
 
-  /// 字符串长度是否在闭区间 `[min, max]` 内。
+  /// Whether [v]'s length is within the closed interval `[min, max]`.
   static bool lengthBetween(String v, int min, int max) =>
       v.length >= min && v.length <= max;
 
-  /// 强制 [condition] 为真，否则抛 [ArgumentError]（可带 [message]）。
+  /// Assert [condition] is `true`; throws [ArgumentError] otherwise.
   static void require(bool condition, [String? message]) {
     if (!condition) {
       throw ArgumentError(message ?? 'validation failed');

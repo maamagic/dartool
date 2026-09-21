@@ -1,15 +1,13 @@
-/// 日期时间工具类。
-///
-/// 零第三方依赖实现常用格式化、解析、时间戳转换、相对时间等能力。
+/// Utilities for parsing / formatting dates with zero third-party
+/// dependencies. Supports `yyyy MM dd HH mm ss SSS` tokens.
 abstract final class DateUtil {
   DateUtil._();
 
-  /// 默认格式。
+  /// Default format pattern.
   static const String defaultPattern = 'yyyy-MM-dd HH:mm:ss';
 
-  /// 按 [pattern] 格式化时间。
-  ///
-  /// 支持的占位符：`yyyy` `MM` `dd` `HH` `mm` `ss` `SSS`。
+  /// Format [dt] using [pattern]. Supported tokens:
+  /// `yyyy` `MM` `dd` `HH` `mm` `ss` `SSS`.
   static String format(DateTime dt, [String pattern = defaultPattern]) {
     String pad(int v, int n) => v.toString().padLeft(n, '0');
     return pattern.replaceAllMapped(_tokenPattern, (m) {
@@ -34,11 +32,11 @@ abstract final class DateUtil {
     });
   }
 
-  /// 以 [pattern] 格式化当前时间。
+  /// Format the current time using [pattern].
   static String formatNow([String pattern = defaultPattern]) =>
       format(DateTime.now(), pattern);
 
-  /// 解析字符串为时间；失败抛 [FormatException]。
+  /// Parse [text] with [pattern]; throws [FormatException] on failure.
   static DateTime parse(String text, [String pattern = defaultPattern]) {
     final dt = tryParse(text, pattern);
     if (dt == null) {
@@ -47,7 +45,7 @@ abstract final class DateUtil {
     return dt;
   }
 
-  /// 解析字符串为时间；失败返回 `null`。
+  /// Parse [text] with [pattern]; returns `null` on failure.
   static DateTime? tryParse(String text, [String pattern = defaultPattern]) {
     final tokens = _tokenize(pattern);
     final sb = StringBuffer();
@@ -77,75 +75,82 @@ abstract final class DateUtil {
     );
   }
 
-  /// 转为时间戳。默认秒级，[millis] 为 `true` 时毫秒级。
+  /// Convert [dt] to a Unix timestamp. Returns seconds by default, or
+  /// milliseconds when [millis] is `true`.
   static int toTimestamp(DateTime dt, {bool millis = false}) =>
       millis ? dt.millisecondsSinceEpoch : dt.millisecondsSinceEpoch ~/ 1000;
 
-  /// 从时间戳构造时间。默认秒级，[millis] 为 `true` 时毫秒级。
+  /// Build a [DateTime] from a Unix timestamp. Assumes seconds by default,
+  /// or milliseconds when [millis] is `true`.
   static DateTime fromTimestamp(int ts, {bool millis = false}) =>
       DateTime.fromMillisecondsSinceEpoch(millis ? ts : ts * 1000);
 
-  /// 当前时间戳。默认秒级，[millis] 为 `true` 时毫秒级。
+  /// Current Unix timestamp. Seconds by default; [millis] for milliseconds.
   static int nowTimestamp({bool millis = false}) =>
       toTimestamp(DateTime.now(), millis: millis);
 
-  /// 今天零点。
+  /// Start of today (midnight).
   static DateTime today() {
     final n = DateTime.now();
     return DateTime(n.year, n.month, n.day);
   }
 
-  /// 昨天零点。
+  /// Start of yesterday (midnight).
   static DateTime yesterday() => today().subtract(const Duration(days: 1));
 
-  /// 明天零点。
+  /// Start of tomorrow (midnight).
   static DateTime tomorrow() => today().add(const Duration(days: 1));
 
-  /// 当天零点。
+  /// Start of the day containing [dt] (midnight).
   static DateTime startOfDay(DateTime dt) =>
       DateTime(dt.year, dt.month, dt.day);
 
-  /// 当天最后一毫秒（`23:59:59.999`）。
+  /// End of the day containing [dt] — `23:59:59.999`.
   static DateTime endOfDay(DateTime dt) =>
       DateTime(dt.year, dt.month, dt.day, 23, 59, 59, 999);
 
-  /// 是否同一天。
+  /// Whether [a] and [b] fall on the same calendar day.
   static bool isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  /// 是否同一个月。
+  /// Whether [a] and [b] fall in the same calendar month.
   static bool isSameMonth(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month;
 
-  /// 计算 [start] 到 [end] 的差值。
+  /// Difference from [start] to [end].
   static Duration between(DateTime start, DateTime end) =>
       end.difference(start);
 
-  /// 计算 [start] 到 [end] 相差的整天数（可能为负）。
+  /// Whole days between [start] and [end] (may be negative).
   static int betweenDays(DateTime start, DateTime end) =>
       end.difference(start).inDays;
 
-  /// 相对时间（中文），如"刚刚 / 5分钟前 / 3小时前 / 2天前 / 4个月前 / 1年前"。
+  /// Human-readable relative time, e.g. "just now", "5 minutes ago",
+  /// "2 hours ago", "3 days ago", "2 months ago", "1 year ago".
   static String relativeTime(DateTime dt, {DateTime? now}) {
     final ref = now ?? DateTime.now();
     final diff = ref.difference(dt);
-    if (diff.inSeconds < 60) return '刚刚';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}分钟前';
-    if (diff.inHours < 24) return '${diff.inHours}小时前';
-    if (diff.inDays < 30) return '${diff.inDays}天前';
-    if (diff.inDays < 365) return '${diff.inDays ~/ 30}个月前';
-    return '${diff.inDays ~/ 365}年前';
+    if (diff.inSeconds < 60) return 'just now';
+    if (diff.inMinutes < 60)
+      return '${diff.inMinutes} minute${diff.inMinutes == 1 ? '' : 's'} ago';
+    if (diff.inHours < 24)
+      return '${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago';
+    if (diff.inDays < 30)
+      return '${diff.inDays} day${diff.inDays == 1 ? '' : 's'} ago';
+    if (diff.inDays < 365)
+      return '${diff.inDays ~/ 30} month${diff.inDays ~/ 30 == 1 ? '' : 's'} ago';
+    return '${diff.inDays ~/ 365} year${diff.inDays ~/ 365 == 1 ? '' : 's'} ago';
   }
 
-  /// 星期名称（中文），如"周一"。
+  /// English weekday name: "Monday" … "Sunday".
   static String weekdayName(DateTime dt) => switch (dt.weekday) {
-    1 => '周一',
-    2 => '周二',
-    3 => '周三',
-    4 => '周四',
-    5 => '周五',
-    6 => '周六',
-    7 => '周日',
+    1 => 'Monday',
+    2 => 'Tuesday',
+    3 => 'Wednesday',
+    4 => 'Thursday',
+    5 => 'Friday',
+    6 => 'Saturday',
+    7 => 'Sunday',
     _ => '',
   };
 
@@ -201,7 +206,7 @@ abstract final class DateUtil {
   }
 }
 
-/// 解析用内部 token。
+/// Internal token used by the parser.
 class _Token {
   _Token(this.name, this.regex);
 

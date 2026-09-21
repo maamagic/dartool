@@ -57,28 +57,28 @@ void main() {
       final now = DateTime(2026, 9, 21, 12, 0, 0);
       expect(
         DateUtil.relativeTime(now.subtract(Duration(seconds: 5)), now: now),
-        '刚刚',
+        'just now',
       );
       expect(
         DateUtil.relativeTime(now.subtract(Duration(minutes: 5)), now: now),
-        '5分钟前',
+        '5 minutes ago',
       );
       expect(
         DateUtil.relativeTime(now.subtract(Duration(hours: 3)), now: now),
-        '3小时前',
+        '3 hours ago',
       );
       expect(
         DateUtil.relativeTime(now.subtract(Duration(days: 2)), now: now),
-        '2天前',
+        '2 days ago',
       );
       expect(
         DateUtil.relativeTime(now.subtract(Duration(days: 60)), now: now),
-        '2个月前',
+        '2 months ago',
       );
     });
 
     test('weekdayName', () {
-      expect(DateUtil.weekdayName(DateTime(2026, 9, 21)), '周一');
+      expect(DateUtil.weekdayName(DateTime(2026, 9, 21)), 'Monday');
     });
   });
 }

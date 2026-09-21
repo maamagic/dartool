@@ -1,7 +1,7 @@
-/// dartool_flutter —— dartool 的 Flutter 专属扩展。
+/// dartool_flutter — Flutter-specific extensions built on top of dartool.
 ///
-/// 提供平台判断、日志等依赖 Flutter 的能力，配合纯 Dart 的 `dartool`
-/// 一起使用：
+/// Provides platform detection, logging and widget shorthands. Combine with
+/// the pure-Dart `dartool` package:
 /// ```dart
 /// import 'package:dartool/dartool.dart';
 /// import 'package:dartool_flutter/dartool_flutter.dart';

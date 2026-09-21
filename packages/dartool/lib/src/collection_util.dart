@@ -1,23 +1,24 @@
-/// 集合（List / Set / Iterable）工具类。
+/// Collection (List / Set / Iterable) utilities.
 abstract final class CollectionUtil {
   CollectionUtil._();
 
-  /// 判断集合是否为 `null` 或为空。
+  /// Whether [coll] is `null` or empty.
   static bool isEmpty(Iterable<Object?>? coll) => coll == null || coll.isEmpty;
 
-  /// 判断集合是否非空（即 [isEmpty] 的反向）。
+  /// Whether [coll] is non-empty (inverse of [isEmpty]).
   static bool isNotEmpty(Iterable<Object?>? coll) => !isEmpty(coll);
 
-  /// 判断集合是否为 `null` 或为空（[isEmpty] 的别名，语义更明确）。
+  /// Alias of [isEmpty]; semantically more explicit for nullable collections.
   static bool isNullOrEmpty(Iterable<Object?>? coll) => isEmpty(coll);
 
-  /// 去重并保持原有顺序。
+  /// Remove duplicates while preserving original order.
   static List<T> distinct<T>(Iterable<T> iter) {
     final seen = <T>{};
     return iter.where(seen.add).toList();
   }
 
-  /// 按 [keyOf] 返回的键对元素分组，得到 `key -> List<T>` 映射。
+  /// Group elements by the key returned by [keyOf], producing a
+  /// `Map<K, List<T>>`.
   static Map<K, List<T>> groupBy<T, K>(Iterable<T> iter, K Function(T) keyOf) {
     final map = <K, List<T>>{};
     for (final e in iter) {
@@ -26,7 +27,7 @@ abstract final class CollectionUtil {
     return map;
   }
 
-  /// 将集合按 [size] 分块，返回若干子列表；最后一个块可能不足 [size]。
+  /// Split [iter] into chunks of [size]; the last chunk may be smaller.
   static List<List<T>> chunk<T>(Iterable<T> iter, int size) {
     if (size <= 0) {
       throw ArgumentError.value(size, 'size', 'must be greater than 0');
@@ -44,19 +45,19 @@ abstract final class CollectionUtil {
     return result;
   }
 
-  /// 扁平化嵌套集合为单层列表。
+  /// Flatten a nested iterable into a single-level list.
   static List<T> flatten<T>(Iterable<Iterable<T>> nested) => [
     for (final l in nested) ...l,
   ];
 
-  /// 返回首个元素；集合为空返回 `null`。
+  /// Returns the first element, or `null` if [iter] is empty.
   static T? firstOrNull<T>(Iterable<T> iter) =>
       iter.isEmpty ? null : iter.first;
 
-  /// 返回末个元素；集合为空返回 `null`。
+  /// Returns the last element, or `null` if [iter] is empty.
   static T? lastOrNull<T>(Iterable<T> iter) => iter.isEmpty ? null : iter.last;
 
-  /// 返回索引 [index] 处的元素；越界或为负返回 `null`。
+  /// Returns the element at [index], or `null` if out of bounds / negative.
   static T? elementAtOrNull<T>(Iterable<T> iter, int index) {
     if (index < 0) return null;
     var i = 0;
@@ -67,11 +68,12 @@ abstract final class CollectionUtil {
     return null;
   }
 
-  /// 返回索引 [index] 处的元素；越界返回 [fallback]。
+  /// Returns the element at [index], or [fallback] if out of bounds.
   static T getOrDefault<T>(Iterable<T> iter, int index, T fallback) =>
       elementAtOrNull(iter, index) ?? fallback;
 
-  /// 按 [keyOf] 提取的键排序（默认升序，[desc] 为 `true` 时降序）。
+  /// Sort by the key extracted via [keyOf] (ascending by default; set [desc]
+  /// to `true` for descending).
   static List<T> sortBy<T, K extends Comparable<K>>(
     Iterable<T> iter,
     K Function(T) keyOf, {
@@ -85,7 +87,8 @@ abstract final class CollectionUtil {
     return list;
   }
 
-  /// 以 [keys] 与 [values] 一一对应构造映射；以较短者为准。
+  /// Build a `Map<K, V>` from paired [keys] and [values]; the shorter
+  /// iterable determines the length.
   static Map<K, V> toMap<K, V>(Iterable<K> keys, Iterable<V> values) {
     final kit = keys.iterator;
     final vit = values.iterator;
@@ -96,7 +99,7 @@ abstract final class CollectionUtil {
     return map;
   }
 
-  /// 统计满足 [predicate] 的元素个数。
+  /// Count elements matching [predicate].
   static int countWhere<T>(Iterable<T> iter, bool Function(T) predicate) =>
       iter.where(predicate).length;
 }

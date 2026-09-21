@@ -2,42 +2,42 @@
 
 [![CI](https://github.com/maamagic/dartool/actions/workflows/ci.yml/badge.svg)](https://github.com/maamagic/dartool/actions)
 
-> 一个面向 Flutter / Dart 的 Hutool 风格工具库 —— 简单、统一、开箱即用。
+> A Hutool-style toolkit for Flutter / Dart -- simple, unified and out-of-the-box.
 
-`dartool` 借鉴了 Java 生态 [Hutool](https://hutool.cn/) 的设计哲学：**按需引入、模块化、一个方法解决一类问题**。仓库使用 [melos](https://melos.invertase.dev/) 管理，拆分为多个子包。
+Inspired by Java's [Hutool](https://hutool.cn/), `dartool` follows the philosophy of **modular, on-demand, one method for one problem**. The repository is managed with [melos](https://melos.invertase.dev/) and split into multiple sub-packages.
 
-## 📦 子包
+## Sub-packages
 
-| 包 | 定位 | pub |
+| Package | Positioning | pub |
 |---|---|---|
-| [dartool](packages/dartool) | 纯 Dart 核心（字符串 / 集合 / 日期 / 正则 / 枚举 / 校验 / 转换 / ID 等） | [![pub](https://img.shields.io/pub/v/dartool.svg)](https://pub.dev/packages/dartool) |
-| [dartool_flutter](packages/dartool_flutter) | Flutter 专属扩展（平台判断 / 日志等） | [![pub](https://img.shields.io/pub/v/dartool_flutter.svg)](https://pub.dev/packages/dartool_flutter) |
+| [dartool](packages/dartool) | Pure Dart core (String / Collection / Date / Regex / Enum / Validation / Conversion / ID, etc.) | [![pub](https://img.shields.io/pub/v/dartool.svg)](https://pub.dev/packages/dartool) |
+| [dartool_flutter](packages/dartool_flutter) | Flutter-specific extensions (Platform detection / Logging / Widget helpers, etc.) | [![pub](https://img.shields.io/pub/v/dartool_flutter.svg)](https://pub.dev/packages/dartool_flutter) |
 
-更多扩展包（`dartool_http`、`dartool_crypto`、`dartool_cache`、`dartool_widget` 等）将按需迭代。
+More extension packages (`dartool_http`, `dartool_crypto`, `dartool_cache`, `dartool_widget`, etc.) will be added on demand.
 
-## 🚀 快速开始
+## Quick Start
 
-### 纯 Dart 项目
+### Pure Dart projects
 
 ```yaml
 dependencies:
-  dartool: ^0.1.0-dev.1
+  dartool: ^0.1.0-dev.2
 ```
 
 ```dart
 import 'package:dartool/dartool.dart';
 
-print(StrUtil.isBlank('   '));          // true
+print(StrUtil.isBlank('   '));            // true
 print(StrUtil.toCamelCase('hello_world')); // helloWorld
-print(IdUtil.uuid());                    // xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+print(IdUtil.uuid());                      // xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-### Flutter 项目
+### Flutter projects
 
 ```yaml
 dependencies:
-  dartool: ^0.1.0-dev.1
-  dartool_flutter: ^0.1.0-dev.1
+  dartool: ^0.1.0-dev.2
+  dartool_flutter: ^0.1.0-dev.2
 ```
 
 ```dart
@@ -49,55 +49,58 @@ if (PlatformUtil.isAndroid) {
 }
 ```
 
-## 🛠 本地开发
+## Local Development
 
-前置：安装 [Flutter](https://flutter.dev)（自带 Dart 3.9+）。
+Prerequisite: install [Flutter](https://flutter.dev) (ships with Dart 3.9+).
 
 ```bash
-# 安装 melos
+# Install melos
 dart pub global activate melos
 
-# 引导工作区（拉取所有包依赖）
+# Bootstrap the workspace (fetch all package dependencies)
 melos bootstrap
 
-# 静态分析
+# Static analysis
 melos run analyze
 
-# 运行全部测试
+# Run all tests
 melos run test
 
-# 发布前检查（analyze + test + format）
+# Pre-publish check (analyze + test + format)
 melos run pre_publish
 ```
 
-## 📐 模块一览
+## Module Overview
 
-### dartool（纯 Dart 核心）
+### dartool (pure Dart core)
 
-| 工具类 | 说明 |
+| Class | Description |
 |---|---|
-| `StrUtil` | 字符串判空、大小写转换、去空格、截断、驼峰 / 下划线互转等 |
-| `CollectionUtil` | 集合判空、去重、分页、扁平化、分组等 |
-| `DateUtil` | 格式化、解析、时间戳互转、相对时间、时区等 |
-| `RegexUtil` | 常用正则（手机号 / 邮箱 / URL / 身份证等）与匹配判断 |
-| `EnumUtil` | 枚举按名 / 值解析、遍历等 |
-| `ValidateUtil` | 数据校验（非空、邮箱、手机号、身份证等） |
-| `ConvertUtil` | 类型转换（字符串↔数字↔布尔等，带兜底） |
-| `IdUtil` | UUID、雪花 ID、短唯一 ID 等 |
-| `Optional` | 可空值容器 |
-| `Result` | 结果容器（成功 / 失败） |
+| `StrUtil` | String blank checks, case conversion, trimming, truncation, camel/snake conversion |
+| `CollectionUtil` | Collection empty checks, dedup, pagination, flatten, grouping |
+| `DateUtil` | Formatting, parsing, timestamp conversion, relative time, timezones |
+| `RegexUtil` | Common regex patterns (phone, email, URL, ID card) and matchers |
+| `EnumUtil` | Enum name/value resolution, iteration |
+| `ValidateUtil` | Data validation (non-null, email, phone, ID card, range) |
+| `ConvertUtil` | Type conversion (String <-> num <-> bool <-> DateTime) with fallbacks |
+| `IdUtil` | UUID, snowflake ID, short unique ID generation |
+| `Optional` | Null-safe value container (Java Optional style) |
+| `Result` | Success / failure container with data or error |
+| `ColorUtil` | Color conversion, luminance, interpolation (pure Dart) |
+| `CryptoUtil` | Base64 / Hex encoding, MD5 / SHA / HMAC hashing, XOR obfuscation |
 
-### dartool_flutter（Flutter 扩展）
+### dartool_flutter (Flutter extensions)
 
-| 工具类 | 说明 |
+| Class | Description |
 |---|---|
-| `PlatformUtil` | 平台判断，Web 安全 |
-| `LogUtil` | 分级日志，可替换输出 |
+| `PlatformUtil` | Platform detection (Web-safe) |
+| `LogUtil` | Leveled logging with swappable output |
+| `WidgetUtil` | Common Flutter widget shorthands |
 
-## 🤝 贡献
+## Contributing
 
-欢迎提 Issue 与 PR。提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/)，代码风格遵循 `lints`，新增功能请编写单测。
+Issues and PRs are welcome. Follow [Conventional Commits](https://www.conventionalcommits.org/), respect the `lints` rules, and add tests for new features.
 
-## 📃 License
+## License
 
 [MIT](LICENSE)

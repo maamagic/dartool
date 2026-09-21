@@ -1,12 +1,13 @@
-/// dartool —— 面向 Dart / Flutter 的 Hutool 风格工具库（纯 Dart 核心）。
+/// dartool — A Hutool-style utility library for Dart / Flutter (pure Dart core).
 ///
-/// 本库零 Flutter 依赖，纯 Dart 项目也可直接使用。
-/// 用法：
+/// Zero Flutter dependency; works in every Dart project.
+///
 /// ```dart
 /// import 'package:dartool/dartool.dart';
 ///
 /// print(StrUtil.isBlank('   '));        // true
-/// print(IdUtil.uuid());                 // 随机 UUID
+/// print(IdUtil.uuid());                 // random UUID
+/// print(CryptoUtil.md5('hello'));       // 5d41402abc4b2a76b9719d911017c592
 /// ```
 library;
 

@@ -1,12 +1,9 @@
-/// 类型转换工具类。
-///
-/// 将字符串、数字、布尔等类型互相转换，均提供兜底值，避免抛出异常。
-library;
-
 import 'date_util.dart';
 
-/// Utility methods for converting between common types (int, double, bool,
-/// String, DateTime, List) with safe fallbacks.
+/// Safe type-conversion utilities with graceful fallbacks — never throws.
+///
+/// Converts between `int`, `double`, `bool`, `String`, `DateTime` and `List`,
+/// picking sensible defaults when parsing fails.
 ///
 /// Example:
 /// ```dart
@@ -18,7 +15,7 @@ import 'date_util.dart';
 abstract final class ConvertUtil {
   ConvertUtil._();
 
-  /// 转为 `int`；失败返回 [fallback]。
+  /// Convert [v] to `int`. Returns [fallback] on failure.
   static int? toInt(dynamic v, {int? fallback}) {
     if (v is int) return v;
     if (v is num) return v.toInt();
@@ -31,7 +28,7 @@ abstract final class ConvertUtil {
     return fallback;
   }
 
-  /// 转为 `double`；失败返回 [fallback]。
+  /// Convert [v] to `double`. Returns [fallback] on failure.
   static double? toDouble(dynamic v, {double? fallback}) {
     if (v is double) return v;
     if (v is num) return v.toDouble();
@@ -44,9 +41,11 @@ abstract final class ConvertUtil {
     return fallback;
   }
 
-  /// 转为 `bool`；无法识别时返回 [fallback]。
+  /// Convert [v] to `bool`. Returns [fallback] on failure.
   ///
-  /// 字符串识别：`true/1/yes/y/是` → true，`false/0/no/n/否` → false。
+  /// Truthy strings: `true/1/yes/y/shi`. Also accepts the Chinese character
+  /// for "yes". Falsy strings: `false/0/no/n/fou`. Also accepts the Chinese
+  /// character for "no".
   static bool? toBool(dynamic v, {bool? fallback}) {
     if (v is bool) return v;
     if (v is num) return v != 0;
@@ -59,11 +58,12 @@ abstract final class ConvertUtil {
     return fallback;
   }
 
-  /// 转为字符串；`null` 返回 [fallback]。
+  /// Convert [v] to `String`. Returns [fallback] (default `''`) when input is `null`.
   static String toStringVal(dynamic v, {String fallback = ''}) =>
       v == null ? fallback : v.toString();
 
-  /// 转为时间；支持 `DateTime` / 毫秒时间戳 / 常见字符串格式。
+  /// Convert [v] to `DateTime`. Accepts `DateTime`, millisecond timestamps,
+  /// and parseable strings. Returns [fallback] on failure.
   static DateTime? toDateTime(dynamic v, {DateTime? fallback}) {
     if (v is DateTime) return v;
     if (v is num) return DateTime.fromMillisecondsSinceEpoch(v.toInt());
@@ -75,7 +75,8 @@ abstract final class ConvertUtil {
     return fallback;
   }
 
-  /// 转为 `List<T>`；非集合返回 [fallback]（默认为空列表）。
+  /// Convert [v] to `List<T>`. Returns [fallback] (default `[]`) when input is
+  /// not a collection.
   static List<T> toList<T>(dynamic v, {List<T>? fallback}) {
     if (v is List) return v.cast<T>();
     if (v is Iterable) return v.cast<T>().toList();

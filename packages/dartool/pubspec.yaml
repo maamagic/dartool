@@ -4,6 +4,7 @@ description: >-
   A Hutool-style toolkit for Dart. Simple, unified and out-of-the-box
   utilities for everyday development: strings, collections, dates, regex,
   enums, validation, conversion and ID generation.
+repository: https://github.com/maamagic/dartool
 version: 0.1.0-dev.1
 
 resolution: workspace

@@ -7,7 +7,7 @@ void main() {
     LogUtil.output = (_) {};
   });
 
-  test('浣庝簬 minLevel 鐨勬棩蹇楄杩囨护', () {
+  test('logLevel', () {
     final lines = <String>[];
     LogUtil.output = lines.add;
     LogUtil.minLevel = LogLevel.warn;
@@ -20,7 +20,7 @@ void main() {
     expect(lines, ['[WARN] w', '[ERROR] e']);
   });
 
-  test('杈撳嚭鍖呭惈鏍囩', () {
+  test('tag', () {
     final lines = <String>[];
     LogUtil.output = lines.add;
 
@@ -29,7 +29,7 @@ void main() {
     expect(lines.single, '[INFO] [mytag] msg');
   });
 
-  test('榛樿涓嶈緭鍑烘棤鏍囩鏃剁殑澶氫綑绌烘牸', () {
+  test('default tag', () {
     final lines = <String>[];
     LogUtil.output = lines.add;
 

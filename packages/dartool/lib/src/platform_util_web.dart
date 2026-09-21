@@ -1,0 +1,14 @@
+bool get isWeb => true;
+bool get isIOS => false;
+bool get isAndroid => false;
+bool get isFuchsia => false;
+bool get isLinux => false;
+bool get isMacOS => false;
+bool get isWindows => false;
+String get operatingSystem => 'web';
+String get operatingSystemVersion => '';
+int get numberOfProcessors => 1;
+String get pathSeparator => '/';
+String get lineSeparator => '\n';
+String get localHostname => '';
+String environment(String name, {String fallback = ''}) => fallback;

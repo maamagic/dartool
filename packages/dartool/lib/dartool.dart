@@ -30,6 +30,8 @@ export 'src/map_util.dart';
 export 'src/num_util.dart';
 export 'src/optional.dart';
 export 'src/path_util.dart';
+export 'src/perf_util.dart';
+export 'src/platform_util.dart';
 export 'src/random_util.dart';
 export 'src/regex_util.dart';
 export 'src/result.dart';

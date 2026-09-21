@@ -35,8 +35,14 @@ void main() {
     test('decodeMap / decodeList', () {
       expect(JsonUtil.decodeMap('{"a":1}'), isA<Map<String, dynamic>>());
       expect(JsonUtil.decodeList('[1,2]'), isA<List<dynamic>>());
-      expect(JsonUtil.decodeMap('bad', fallback: {}), {});
-      expect(JsonUtil.decodeList('bad', fallback: []), []);
+      expect(
+        JsonUtil.decodeMap('bad', fallback: <String, dynamic>{}),
+        <String, dynamic>{},
+      );
+      expect(
+        JsonUtil.decodeList('bad', fallback: const <dynamic>[]),
+        const <dynamic>[],
+      );
     });
   });
 

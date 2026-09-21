@@ -1,4 +1,4 @@
-import 'package:dartool_flutter/dartool_flutter.dart';
+import 'package:dartool/dartool.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -11,6 +11,7 @@
 /// }
 /// ```
 library;
+
 export 'src/media_query_util.dart';
 export 'src/theme_util.dart';
 

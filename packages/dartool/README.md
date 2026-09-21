@@ -37,7 +37,7 @@ void main() {
 
   // Collection utilities
   print(CollectionUtil.isEmpty([]));            // true
-  print([3, 1, 2].distinct());                  // [3, 1, 2]
+  print(CollectionUtil.distinct([3, 1, 2, 1]));   // [3, 1, 2]
 
   // Date utilities
   print(DateUtil.formatNow());                  // 2026-09-21 12:00:00
@@ -55,7 +55,7 @@ void main() {
 
   // Optional container
   final op = Optional.of('hello');
-  print(op.orElse('default'));                  // hello
+  print(op.getOrElse('default'));                 // hello
 }
 ```
 

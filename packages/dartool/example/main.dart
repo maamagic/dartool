@@ -12,7 +12,9 @@ void main() {
 
   // Collection utilities
   print('CollectionUtil.isEmpty([]) = ${CollectionUtil.isEmpty(<int>[])}');
-  print('[3, 1, 2].distinct() = ${[3, 1, 2, 1].distinct()}');
+  print(
+    'CollectionUtil.distinct([3, 1, 2, 1]) = ${CollectionUtil.distinct([3, 1, 2, 1])}',
+  );
 
   // Date utilities
   print('DateUtil.formatNow() = ${DateUtil.formatNow()}');
@@ -32,7 +34,9 @@ void main() {
 
   // Optional
   final op = Optional.of('hello');
-  print('Optional.of("hello").orElse("default") = ${op.orElse('default')}');
+  print(
+    'Optional.of("hello").getOrElse("default") = ${op.getOrElse('default')}',
+  );
 
   // Result
   final r = Result.success('ok');

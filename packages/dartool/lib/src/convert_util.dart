@@ -5,6 +5,16 @@ library;
 
 import 'date_util.dart';
 
+/// Utility methods for converting between common types (int, double, bool,
+/// String, DateTime, List) with safe fallbacks.
+///
+/// Example:
+/// ```dart
+/// ConvertUtil.toInt('42');       // 42
+/// ConvertUtil.toInt('abc');      // null
+/// ConvertUtil.toBool('yes');     // true
+/// ConvertUtil.toDateTime(1700000000000); // DateTime
+/// ```
 abstract final class ConvertUtil {
   ConvertUtil._();
 

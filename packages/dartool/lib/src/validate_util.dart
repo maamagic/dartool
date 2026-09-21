@@ -7,6 +7,16 @@ library;
 import 'regex_util.dart';
 import 'str_util.dart';
 
+/// Data validation utilities for common use cases: null checks, string
+/// blank checks, email / phone / URL / ID card validation, range checks, etc.
+///
+/// Example:
+/// ```dart
+/// ValidateUtil.isEmail('a@b.com');        // true
+/// ValidateUtil.isPhone('13800138000');    // true
+/// ValidateUtil.inRange(5, 0, 10);         // true
+/// ValidateUtil.notNull(value);            // throws if null
+/// ```
 abstract final class ValidateUtil {
   ValidateUtil._();
 

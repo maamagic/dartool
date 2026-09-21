@@ -1,9 +1,8 @@
 # dartool_flutter —— Flutter 专属扩展包
 name: dartool_flutter
-description: >-
-  Flutter-specific extensions for dartool: platform, device, logging,
-  form validation and more. Works alongside the pure-Dart dartool core.
+description: 'Flutter extensions for dartool: platform detection, logging, form validation and more.'
 repository: https://github.com/maamagic/dartool
+homepage: https://github.com/maamagic/dartool/tree/main/packages/dartool_flutter
 version: 0.1.0-dev.1
 
 resolution: workspace

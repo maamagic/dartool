@@ -1,10 +1,8 @@
 # dartool —— 纯 Dart 核心工具包
 name: dartool
-description: >-
-  A Hutool-style toolkit for Dart. Simple, unified and out-of-the-box
-  utilities for everyday development: strings, collections, dates, regex,
-  enums, validation, conversion and ID generation.
+description: 'A Hutool-style toolkit for Dart: strings, collections, dates, regex, validation, conversion and more.'
 repository: https://github.com/maamagic/dartool
+homepage: https://github.com/maamagic/dartool/tree/main/packages/dartool
 version: 0.1.0-dev.1
 
 resolution: workspace

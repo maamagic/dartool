@@ -130,4 +130,127 @@ abstract final class StrUtil {
     if (str.length <= left + right) return mask;
     return str.substring(0, left) + mask + str.substring(str.length - right);
   }
+
+  // ---------------------------------------------------------------------------
+  // Character-type checks
+  // ---------------------------------------------------------------------------
+
+  /// Whether [str] consists only of ASCII printable characters (code points
+  /// 0x20 through 0x7E).
+  static bool isAscii(String? str) {
+    if (str == null || str.isEmpty) return false;
+    return str.runes.every((r) => r >= 0x20 && r <= 0x7E);
+  }
+
+  /// Whether every rune of [str] is a Unicode letter (alphabetic).
+  static bool isAlphabetic(String? str) {
+    if (str == null || str.isEmpty) return false;
+    return str.runes.every((r) => _isLetter(r));
+  }
+
+  /// Whether every rune of [str] is a Unicode letter or decimal digit.
+  static bool isAlphanumeric(String? str) {
+    if (str == null || str.isEmpty) return false;
+    return str.runes.every((r) => _isLetter(r) || (r >= 0x30 && r <= 0x39));
+  }
+
+  static bool _isLetter(int r) {
+    // A-Z, a-z, plus Latin-1 supplement letters.
+    return (r >= 0x41 && r <= 0x5A) ||
+        (r >= 0x61 && r <= 0x7A) ||
+        (r >= 0xC0 && r <= 0xFF && r != 0xD7 && r != 0xF7);
+  }
+
+  // ---------------------------------------------------------------------------
+  // StartsWith / endsWith (case-insensitive)
+  // ---------------------------------------------------------------------------
+
+  /// Case-insensitive `startsWith`.
+  static bool startsWithIgnoreCase(String str, String prefix) {
+    if (prefix.length > str.length) return false;
+    return str.substring(0, prefix.length).toLowerCase() ==
+        prefix.toLowerCase();
+  }
+
+  /// Case-insensitive `endsWith`.
+  static bool endsWithIgnoreCase(String str, String suffix) {
+    if (suffix.length > str.length) return false;
+    return str.substring(str.length - suffix.length).toLowerCase() ==
+        suffix.toLowerCase();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Split / join helpers
+  // ---------------------------------------------------------------------------
+
+  /// Split [str] by [pattern] and trim each piece; empty strings are dropped
+  /// when [dropEmpty] is `true`.
+  static List<String> splitAndTrim(
+    String str,
+    String pattern, {
+    bool dropEmpty = true,
+  }) {
+    final parts = str.split(pattern).map((s) => s.trim());
+    if (dropEmpty) return parts.where((s) => s.isNotEmpty).toList();
+    return parts.toList();
+  }
+
+  /// Join the non-blank items of [parts] with [separator].
+  static String join(Iterable<String?> parts, [String separator = '']) {
+    final list = parts.where((s) => s != null && s.isNotEmpty).cast<String>();
+    return list.join(separator);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Manipulation
+  // ---------------------------------------------------------------------------
+
+  /// Reverse [str].
+  static String reverse(String str) =>
+      String.fromCharCodes(str.runes.toList().reversed);
+
+  /// Count how many times [char] appears in [str].
+  static int countChar(String str, String char) {
+    if (char.isEmpty || char.length > 1) {
+      throw ArgumentError.value(char, 'char', 'must be a single character');
+    }
+    var n = 0;
+    for (var i = 0; i < str.length; i++) {
+      if (str[i] == char) n++;
+    }
+    return n;
+  }
+
+  /// Remove [prefix] from the start of [str] if present.
+  static String removePrefix(String str, String prefix) {
+    if (prefix.isEmpty) return str;
+    if (str.startsWith(prefix)) return str.substring(prefix.length);
+    return str;
+  }
+
+  /// Remove [suffix] from the end of [str] if present.
+  static String removeSuffix(String str, String suffix) {
+    if (suffix.isEmpty) return str;
+    if (str.endsWith(suffix))
+      return str.substring(0, str.length - suffix.length);
+    return str;
+  }
+
+  /// Wrap [str] with [wrapper] on both sides.
+  static String wrap(String str, String wrapper) => '$wrapper$str$wrapper';
+
+  /// Return [str] if non-blank, otherwise [fallback].
+  static String ifBlank(String? str, String fallback) =>
+      isBlank(str) ? fallback : str!;
+
+  /// Return the substring between the first occurrence of [left] and the
+  /// following occurrence of [right]. Returns `''` if not found.
+  static String between(String str, String left, String right) {
+    final li = str.indexOf(left);
+    if (li < 0) return '';
+    final start = li + left.length;
+    final ri = str.indexOf(right, start);
+    if (ri < 0) return '';
+    return str.substring(start, ri);
+  }
 }

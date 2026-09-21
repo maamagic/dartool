@@ -75,4 +75,59 @@ void main() {
       expect(CollectionUtil.countWhere([1, 2, 3, 4], (x) => x.isEven), 2);
     });
   });
+
+  group('CollectionUtil conversion helpers', () {
+    test('toList / toSet handle null', () {
+      expect(CollectionUtil.toList<int>(null), <int>[]);
+      expect(CollectionUtil.toList([1, 2]), [1, 2]);
+      expect(CollectionUtil.toSet<int>(null), <int>{});
+      expect(CollectionUtil.toSet([1, 1, 2]), {1, 2});
+    });
+
+    test('joinToString', () {
+      expect(CollectionUtil.joinToString([1, 2, 3]), '1,2,3');
+      expect(CollectionUtil.joinToString([1, 2, 3], separator: '-'), '1-2-3');
+    });
+  });
+
+  group('CollectionUtil aggregates', () {
+    test('sumOf / averageOf', () {
+      final items = [_Item('a', 10), _Item('b', 20), _Item('c', 30)];
+      expect(CollectionUtil.sumOf<_Item, int>(items, (e) => e.val), 60);
+      expect(CollectionUtil.averageOf<_Item>(items, (e) => e.val), 20.0);
+      expect(CollectionUtil.averageOf<_Item>([], (e) => e.val), 0.0);
+    });
+
+    test('minOf / maxOf', () {
+      final items = [_Item('a', 30), _Item('b', 10), _Item('c', 20)];
+      expect(CollectionUtil.minOf(items, (e) => e.val)!.name, 'b');
+      expect(CollectionUtil.maxOf(items, (e) => e.val)!.name, 'a');
+      expect(CollectionUtil.minOf<_Item, num>([], (e) => e.val), isNull);
+    });
+  });
+
+  group('CollectionUtil mapList / filter / all / any / whereNotNull', () {
+    test('mapList / filter', () {
+      expect(CollectionUtil.mapList([1, 2, 3], (x) => x * 2), [2, 4, 6]);
+      expect(CollectionUtil.filter([1, 2, 3, 4], (x) => x.isEven), [2, 4]);
+    });
+
+    test('all / any', () {
+      expect(CollectionUtil.all([2, 4, 6], (x) => x.isEven), isTrue);
+      expect(CollectionUtil.all([2, 4, 5], (x) => x.isEven), isFalse);
+      expect(CollectionUtil.any([1, 3, 5], (x) => x.isEven), isFalse);
+      expect(CollectionUtil.any([1, 4, 5], (x) => x.isEven), isTrue);
+    });
+
+    test('whereNotNull removes nulls', () {
+      final mixed = <int?>[1, null, 2, null, 3];
+      expect(CollectionUtil.whereNotNull(mixed), [1, 2, 3]);
+    });
+  });
+}
+
+class _Item {
+  final String name;
+  final int val;
+  _Item(this.name, this.val);
 }

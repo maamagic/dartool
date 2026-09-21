@@ -118,4 +118,114 @@ abstract final class WidgetUtil {
   /// (defaults to [none]) otherwise.
   static Widget when(bool condition, Widget child, {Widget fallback = none}) =>
       condition ? child : fallback;
+
+  // ---------------------------------------------------------------------------
+  // Snackbar / Toast helpers
+  // ---------------------------------------------------------------------------
+
+  /// Show a [SnackBar] via [ScaffoldMessenger]. Requires a [context].
+  ///
+  /// The snackbar auto-dismisses after [duration]. Set [action] to attach an
+  /// action button. Returns the `SnackBarClosedReason`.
+  static Future<SnackBarClosedReason> snackbar(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+    SnackBarAction? action,
+    Color? backgroundColor,
+    Color? contentColor,
+  }) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: duration,
+      action: action,
+      backgroundColor: backgroundColor,
+    );
+    return ScaffoldMessenger.of(context).showSnackBar(snackBar).closed;
+  }
+
+  /// Show an "info" snackbar (default dark background).
+  static Future<SnackBarClosedReason> snackInfo(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+  }) => snackbar(context, message, duration: duration);
+
+  /// Show a "success" snackbar (green-ish background).
+  static Future<SnackBarClosedReason> snackSuccess(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+  }) => snackbar(
+    context,
+    message,
+    duration: duration,
+    backgroundColor: const Color(0xFF4CAF50),
+    contentColor: Colors.white,
+  );
+
+  /// Show a "warning" snackbar (amber background).
+  static Future<SnackBarClosedReason> snackWarning(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+  }) => snackbar(
+    context,
+    message,
+    duration: duration,
+    backgroundColor: const Color(0xFFFFA726),
+    contentColor: Colors.white,
+  );
+
+  /// Show an "error" snackbar (red background).
+  static Future<SnackBarClosedReason> snackError(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+  }) => snackbar(
+    context,
+    message,
+    duration: duration,
+    backgroundColor: const Color(0xFFE53935),
+    contentColor: Colors.white,
+  );
+
+  // ---------------------------------------------------------------------------
+  // Navigator shortcuts
+  // ---------------------------------------------------------------------------
+
+  /// Push [route] onto the navigator for [context].
+  static Future<T?> push<T>(BuildContext context, Widget route) =>
+      Navigator.of(context).push<T>(MaterialPageRoute(builder: (_) => route));
+
+  /// Push a named route onto the navigator for [context].
+  static Future<T?> pushNamed<T>(
+    BuildContext context,
+    String routeName, {
+    Object? arguments,
+  }) => Navigator.of(context).pushNamed<T>(routeName, arguments: arguments);
+
+  /// Pop the top route of [context]'s navigator, optionally returning [result].
+  static void pop<T>(BuildContext context, [T? result]) =>
+      Navigator.of(context).pop<T>(result);
+
+  /// Whether the navigator of [context] can be popped.
+  static bool canPop(BuildContext context) => Navigator.of(context).canPop();
+
+  /// Push [route] and remove all previous routes from the stack.
+  static Future<T?> pushAndRemoveAll<T>(BuildContext context, Widget route) =>
+      Navigator.of(context).pushAndRemoveUntil<T>(
+        MaterialPageRoute(builder: (_) => route),
+        (_) => false,
+      );
+
+  /// Pop all routes except the first, then push [route].
+  static Future<T?> pushReplacement<T, TO>(
+    BuildContext context,
+    Widget route, {
+    TO? result,
+  }) => Navigator.of(context).pushReplacement<T, TO>(
+    MaterialPageRoute(builder: (_) => route),
+    result: result,
+  );
 }

@@ -56,4 +56,67 @@ void main() {
       expect(StrUtil.equalsIgnoreCase('AbC', 'aBc'), isTrue);
     });
   });
+
+  group('StrUtil character-type checks', () {
+    test('isAscii', () {
+      expect(StrUtil.isAscii('hello 123'), isTrue);
+      expect(StrUtil.isAscii('中文'), isFalse);
+      expect(StrUtil.isAscii(''), isFalse);
+    });
+
+    test('isAlphabetic / isAlphanumeric', () {
+      expect(StrUtil.isAlphabetic('HelloWorld'), isTrue);
+      expect(StrUtil.isAlphabetic('Hello123'), isFalse);
+      expect(StrUtil.isAlphanumeric('Hello123'), isTrue);
+      expect(StrUtil.isAlphanumeric('Hello 123'), isFalse);
+    });
+  });
+
+  group('StrUtil case-insensitive starts/ends', () {
+    test('startsWithIgnoreCase / endsWithIgnoreCase', () {
+      expect(StrUtil.startsWithIgnoreCase('HelloWorld', 'hello'), isTrue);
+      expect(StrUtil.startsWithIgnoreCase('HelloWorld', 'xyz'), isFalse);
+      expect(StrUtil.endsWithIgnoreCase('HelloWorld', 'WORLD'), isTrue);
+      expect(StrUtil.endsWithIgnoreCase('HelloWorld', 'xyz'), isFalse);
+    });
+  });
+
+  group('StrUtil split / join / reverse / between', () {
+    test('splitAndTrim drops empty pieces', () {
+      expect(StrUtil.splitAndTrim(' a, b , ,c ', ','), ['a', 'b', 'c']);
+      expect(StrUtil.splitAndTrim(' a, b , ,c ', ',', dropEmpty: false), [
+        'a',
+        'b',
+        '',
+        'c',
+      ]);
+    });
+
+    test('join filters null/empty', () {
+      expect(StrUtil.join(['a', '', 'b', null, 'c'], '-'), 'a-b-c');
+    });
+
+    test('reverse / countChar / between', () {
+      expect(StrUtil.reverse('hello'), 'olleh');
+      expect(StrUtil.countChar('banana', 'a'), 3);
+      expect(StrUtil.between('<!-- hi -->', '<!-- ', ' -->'), 'hi');
+      expect(StrUtil.between('abc', '[', ']'), '');
+    });
+  });
+
+  group('StrUtil removePrefix / removeSuffix / wrap / ifBlank', () {
+    test('removePrefix / removeSuffix', () {
+      expect(StrUtil.removePrefix('prefix_world', 'prefix_'), 'world');
+      expect(StrUtil.removePrefix('world', 'prefix_'), 'world');
+      expect(StrUtil.removeSuffix('hello.dart', '.dart'), 'hello');
+      expect(StrUtil.removeSuffix('hello', '.dart'), 'hello');
+    });
+
+    test('wrap / ifBlank', () {
+      expect(StrUtil.wrap('hi', '"'), '"hi"');
+      expect(StrUtil.ifBlank(null, 'default'), 'default');
+      expect(StrUtil.ifBlank('   ', 'default'), 'default');
+      expect(StrUtil.ifBlank('ok', 'default'), 'ok');
+    });
+  });
 }

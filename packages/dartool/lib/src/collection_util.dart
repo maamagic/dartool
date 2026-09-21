@@ -102,4 +102,117 @@ abstract final class CollectionUtil {
   /// Count elements matching [predicate].
   static int countWhere<T>(Iterable<T> iter, bool Function(T) predicate) =>
       iter.where(predicate).length;
+
+  // ---------------------------------------------------------------------------
+  // Conversion helpers
+  // ---------------------------------------------------------------------------
+
+  /// Convert [iter] to a `List<T>`; handles `null` safely.
+  static List<T> toList<T>(Iterable<T>? iter) => iter?.toList() ?? <T>[];
+
+  /// Convert [iter] to a `Set<T>`; handles `null` safely.
+  static Set<T> toSet<T>(Iterable<T>? iter) => iter?.toSet() ?? <T>{};
+
+  /// Build a string by joining the stringification of each element with
+  /// [separator].
+  static String joinToString<T>(Iterable<T> iter, {String separator = ','}) =>
+      iter.map((e) => e.toString()).join(separator);
+
+  // ---------------------------------------------------------------------------
+  // Aggregates
+  // ---------------------------------------------------------------------------
+
+  /// Sum of numeric elements extracted from each item via [numOf].
+  static N sumOf<T, N extends num>(Iterable<T> iter, N Function(T) numOf) {
+    N total = 0 as N;
+    for (final e in iter) {
+      total = (total + numOf(e)) as N;
+    }
+    return total;
+  }
+
+  /// Average of numeric elements extracted from each item via [numOf].
+  /// Returns `0.0` when [iter] is empty.
+  static double averageOf<T>(Iterable<T> iter, num Function(T) numOf) {
+    var count = 0;
+    double total = 0;
+    for (final e in iter) {
+      total += numOf(e);
+      count++;
+    }
+    return count == 0 ? 0.0 : total / count;
+  }
+
+  /// Element in [iter] with the smallest value of [keyOf]. Returns `null` if
+  /// [iter] is empty.
+  static T? minOf<T, K extends Comparable<K>>(
+    Iterable<T> iter,
+    K Function(T) keyOf,
+  ) {
+    T? best;
+    K? bestKey;
+    for (final e in iter) {
+      final k = keyOf(e);
+      if (bestKey == null || k.compareTo(bestKey) < 0) {
+        best = e;
+        bestKey = k;
+      }
+    }
+    return best;
+  }
+
+  /// Element in [iter] with the largest value of [keyOf]. Returns `null` if
+  /// [iter] is empty.
+  static T? maxOf<T, K extends Comparable<K>>(
+    Iterable<T> iter,
+    K Function(T) keyOf,
+  ) {
+    T? best;
+    K? bestKey;
+    for (final e in iter) {
+      final k = keyOf(e);
+      if (bestKey == null || k.compareTo(bestKey) > 0) {
+        best = e;
+        bestKey = k;
+      }
+    }
+    return best;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Other helpers
+  // ---------------------------------------------------------------------------
+
+  /// Build a list by applying [transform] to every element of [iter].
+  static List<R> mapList<T, R>(Iterable<T> iter, R Function(T) transform) =>
+      iter.map(transform).toList();
+
+  /// Build a list of elements for which [predicate] returns `true`.
+  static List<T> filter<T>(Iterable<T> iter, bool Function(T) predicate) =>
+      iter.where(predicate).toList();
+
+  /// Whether every element in [iter] satisfies [predicate].
+  static bool all<T>(Iterable<T> iter, bool Function(T) predicate) {
+    for (final e in iter) {
+      if (!predicate(e)) return false;
+    }
+    return true;
+  }
+
+  /// Whether at least one element in [iter] satisfies [predicate].
+  static bool any<T>(Iterable<T> iter, bool Function(T) predicate) {
+    for (final e in iter) {
+      if (predicate(e)) return true;
+    }
+    return false;
+  }
+
+  /// Remove elements that are `null` from [iter] and cast to `List<T>`.
+  static List<T> whereNotNull<T>(Iterable<T?> iter) {
+    final result = <T>[];
+    for (final e in iter) {
+      if (e != null) result.add(e);
+    }
+    return result;
+  }
 }

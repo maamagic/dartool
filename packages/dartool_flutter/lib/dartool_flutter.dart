@@ -12,8 +12,10 @@
 /// ```
 library;
 export 'src/media_query_util.dart';
+export 'src/theme_util.dart';
 
 export 'src/dialog_util.dart';
 export 'src/log_util.dart';
 export 'src/platform_util.dart';
 export 'src/widget_util.dart';
+export 'src/extensions/widget_ext.dart';

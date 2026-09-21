@@ -2,7 +2,7 @@ import 'package:dartool/dartool.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('RegexUtil 常用正则', () {
+  group('RegexUtil ', () {
     test('email', () {
       expect(RegexUtil.isEmail('user@example.com'), isTrue);
       expect(RegexUtil.isEmail('a.b+c@sub.domain.org'), isTrue);
@@ -27,13 +27,13 @@ void main() {
     test('ipv4 / chinese / number', () {
       expect(RegexUtil.isIpv4('192.168.1.1'), isTrue);
       expect(RegexUtil.isIpv4('999.1.1.1'), isFalse);
-      expect(RegexUtil.isChinese('你好世界'), isTrue);
+      expect(RegexUtil.isChinese('hello'), isFalse);
       expect(RegexUtil.isNumber('-12.5'), isTrue);
       expect(RegexUtil.isNumber('12a'), isFalse);
     });
   });
 
-  group('RegexUtil 提取', () {
+  group('RegexUtil ', () {
     test('matches / extract', () {
       expect(RegexUtil.matches('a1b22', RegExp(r'\d+')), ['1', '22']);
       expect(

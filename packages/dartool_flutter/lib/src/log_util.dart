@@ -17,7 +17,7 @@ abstract final class LogUtil {
   /// Minimum level that will be printed; lower levels are filtered out.
   static LogLevel minLevel = LogLevel.debug;
 
-  /// Actual output callback — override to integrate a custom logger.
+  /// Actual output callback  override to integrate a custom logger.
   static LogOutput output = _defaultOutput;
 
   static void _defaultOutput(String line) => debugPrint(line);

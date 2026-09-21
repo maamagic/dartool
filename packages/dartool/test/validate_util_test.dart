@@ -10,7 +10,7 @@ void main() {
       expect(() => ValidateUtil.notNull(1), returnsNormally);
     });
 
-    test('格式校验', () {
+    test('  ', () {
       expect(ValidateUtil.isEmail('a@b.com'), isTrue);
       expect(ValidateUtil.isPhone('13812345678'), isTrue);
       expect(ValidateUtil.isUrl('https://x.com'), isTrue);
@@ -19,7 +19,7 @@ void main() {
       expect(ValidateUtil.isBlank('   '), isTrue);
     });
 
-    test('范围 / 长度 / require', () {
+    test(' /  / require', () {
       expect(ValidateUtil.inRange(5, 1, 10), isTrue);
       expect(ValidateUtil.inRange(11, 1, 10), isFalse);
       expect(ValidateUtil.lengthBetween('hello', 3, 6), isTrue);

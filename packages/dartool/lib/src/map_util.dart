@@ -1,4 +1,4 @@
-/// Map utilities — higher-level helpers than the core library provides.
+/// Map utilities  higher-level helpers than the core library provides.
 abstract final class MapUtil {
   MapUtil._();
 
@@ -122,7 +122,7 @@ abstract final class MapUtil {
 
   /// Flatten a nested map so that all paths become dot-notation keys.
   ///
-  /// Example: `{'a': {'b': 1}}` → `{'a.b': 1}`.
+  /// Example: `{'a': {'b': 1}}`  `{'a.b': 1}`.
   static Map<String, dynamic> flatten(
     Map<String, dynamic> source, {
     String separator = '.',
@@ -134,7 +134,7 @@ abstract final class MapUtil {
 
   /// Unflatten a dot-notation map back into a nested structure.
   ///
-  /// Example: `{'a.b': 1, 'a.c': 2}` → `{'a': {'b': 1, 'c': 2}}`.
+  /// Example: `{'a.b': 1, 'a.c': 2}`  `{'a': {'b': 1, 'c': 2}}`.
   static Map<String, dynamic> unflatten(
     Map<String, dynamic> source, {
     String separator = '.',

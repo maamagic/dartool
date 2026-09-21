@@ -56,7 +56,7 @@ void main() {
 
     test('formatWithCurrency prepends symbol', () {
       expect(Money(99.9).formatWithCurrency(), r'$99.90');
-      expect(Money(99.9).formatWithCurrency(symbol: '¥'), '¥99.90');
+      expect(Money(99.9).formatWithCurrency(symbol: ''), '99.90');
     });
   });
 
@@ -65,7 +65,7 @@ void main() {
       final parts = Money(100).split(3);
       expect(parts.length, 3);
       expect(parts.fold<int>(0, (s, m) => s + m.cents), 10000);
-      // 100.00 / 3 → 33.33, 33.33, 33.34
+      // 100.00 / 3  33.33, 33.33, 33.34
       expect(parts[2].cents - parts[0].cents, 1);
     });
 

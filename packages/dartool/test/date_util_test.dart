@@ -5,18 +5,18 @@ void main() {
   final fixed = DateTime(2026, 9, 21, 14, 5, 7, 123);
 
   group('DateUtil.format', () {
-    test('默认格式', () {
+    test(' ', () {
       expect(DateUtil.format(fixed), '2026-09-21 14:05:07');
     });
 
-    test('自定义格式与毫秒', () {
+    test(' ', () {
       expect(DateUtil.format(fixed, 'yyyy/MM/dd'), '2026/09/21');
       expect(DateUtil.format(fixed, 'HH:mm:ss.SSS'), '14:05:07.123');
     });
   });
 
   group('DateUtil.parse', () {
-    test('tryParse 成功与失败', () {
+    test('tryParse ', () {
       expect(
         DateUtil.tryParse('2026-09-21 14:05:07'),
         DateTime(2026, 9, 21, 14, 5, 7),
@@ -28,13 +28,13 @@ void main() {
       expect(DateUtil.tryParse('not-a-date'), isNull);
     });
 
-    test('parse 失败抛异常', () {
+    test('parse ', () {
       expect(() => DateUtil.parse('bad'), throwsFormatException);
     });
   });
 
-  group('DateUtil 时间戳', () {
-    test('toTimestamp / fromTimestamp 往返', () {
+  group('DateUtil ', () {
+    test('toTimestamp / fromTimestamp ', () {
       final sec = DateUtil.toTimestamp(fixed);
       final ms = DateUtil.toTimestamp(fixed, millis: true);
       expect(sec, fixed.millisecondsSinceEpoch ~/ 1000);
@@ -44,7 +44,7 @@ void main() {
     });
   });
 
-  group('DateUtil 日期运算', () {
+  group('DateUtil ', () {
     test('startOfDay / endOfDay / isSameDay', () {
       expect(DateUtil.startOfDay(fixed), DateTime(2026, 9, 21));
       expect(DateUtil.endOfDay(fixed).hour, 23);

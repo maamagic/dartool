@@ -1,4 +1,4 @@
-/// Tiny leveled logger — pure Dart, zero deps, mirrors common loggers.
+/// Tiny leveled logger  pure Dart, zero deps, mirrors common loggers.
 ///
 /// ```dart
 /// LogUtil.d('cache hit for user 123');

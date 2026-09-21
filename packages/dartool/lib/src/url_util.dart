@@ -8,7 +8,7 @@ abstract final class UrlUtil {
   // Encoding / decoding
   // ---------------------------------------------------------------------------
 
-  /// Percent-encode a string for use in a URL (space → `%20`, etc.).
+  /// Percent-encode a string for use in a URL (space  `%20`, etc.).
   ///
   /// This is a thin wrapper around [Uri.encodeComponent].
   static String encode(String input) => Uri.encodeComponent(input);
@@ -40,7 +40,7 @@ abstract final class UrlUtil {
 
   /// Safely parse [source] as a [Uri]; returns `null` on failure.
   ///
-  /// Also accepts a raw query string (e.g. `a=1&b=2`) — it is parsed as if it
+  /// Also accepts a raw query string (e.g. `a=1&b=2`)  it is parsed as if it
   /// came from `/?a=1&b=2`.
   static Uri? tryParse(String source) {
     if (source.isEmpty) return null;
@@ -66,7 +66,7 @@ abstract final class UrlUtil {
 
   /// Extract the query string of [source] without the leading `?`.
   ///
-  /// Example: `https://a.com/x?y=1&z=2` → `y=1&z=2`. Returns `''` if none.
+  /// Example: `https://a.com/x?y=1&z=2`  `y=1&z=2`. Returns `''` if none.
   static String queryOf(String source) {
     final uri = tryParse(source);
     if (uri == null) return '';
@@ -75,7 +75,7 @@ abstract final class UrlUtil {
 
   /// Parse the query string of [source] into a `Map<String, String>`.
   ///
-  /// Example: `a=1&b=2&b=3` → `{'a': '1', 'b': '3'}` (last value wins).
+  /// Example: `a=1&b=2&b=3`  `{'a': '1', 'b': '3'}` (last value wins).
   static Map<String, String> parseQuery(String source) {
     final uri = tryParse(source);
     if (uri == null || uri.query.isEmpty) return <String, String>{};
@@ -94,7 +94,7 @@ abstract final class UrlUtil {
 
   /// Build a query string from [params] (without leading `?`).
   ///
-  /// Example: `{'a': 1, 'b': 'x y'}` → `a=1&b=x%20y`.
+  /// Example: `{'a': 1, 'b': 'x y'}`  `a=1&b=x%20y`.
   static String buildQuery(Map<String, Object?> params) {
     final buffer = StringBuffer();
     var first = true;
@@ -113,7 +113,7 @@ abstract final class UrlUtil {
 
   /// Append [params] as query parameters to [url].
   ///
-  /// Example: `appendQuery('https://a.com/p', {'x': 1})` → `https://a.com/p?x=1`.
+  /// Example: `appendQuery('https://a.com/p', {'x': 1})`  `https://a.com/p?x=1`.
   static String appendQuery(String url, Map<String, Object?> params) {
     if (params.isEmpty) return url;
     final q = buildQuery(params);
@@ -123,7 +123,7 @@ abstract final class UrlUtil {
 
   /// Extract the file extension (without leading dot) from a URL path.
   ///
-  /// Example: `https://a.com/foo/bar.png?v=1` → `png`. Returns `''` if none.
+  /// Example: `https://a.com/foo/bar.png?v=1`  `png`. Returns `''` if none.
   static String extensionOf(String source) {
     final uri = tryParse(source);
     if (uri == null) return '';

@@ -1,4 +1,4 @@
-/// Retry helpers — exponential backoff with configurable policies.
+/// Retry helpers  exponential backoff with configurable policies.
 ///
 /// Example:
 /// ```dart

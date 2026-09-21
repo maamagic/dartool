@@ -1,4 +1,4 @@
-/// Tiny benchmark utilities — useful inside tests or CLI tools.
+/// Tiny benchmark utilities  useful inside tests or CLI tools.
 ///
 /// Not to be confused with the full [TimerUtil.stopwatch] family; these are
 /// intentionally one-liners.

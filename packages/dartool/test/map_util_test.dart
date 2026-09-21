@@ -65,7 +65,7 @@ void main() {
   });
 
   group('MapUtil flatten / unflatten', () {
-    test('nested → flat', () {
+    test('nested  flat', () {
       final nested = <String, dynamic>{
         'a': <String, dynamic>{
           'b': 1,
@@ -76,7 +76,7 @@ void main() {
       expect(MapUtil.flatten(nested), {'a.b': 1, 'a.c.d': 2, 'e': 3});
     });
 
-    test('flat → nested round-trip', () {
+    test('flat  nested round-trip', () {
       final flat = <String, dynamic>{'a.b': 1, 'a.c': 2, 'e': 3};
       final nested = MapUtil.unflatten(flat);
       expect(nested, {

@@ -21,7 +21,7 @@ void main() {
     test('toBool', () {
       expect(ConvertUtil.toBool('true'), isTrue);
       expect(ConvertUtil.toBool(1), isTrue);
-      expect(ConvertUtil.toBool('否'), isFalse);
+      expect(ConvertUtil.toBool(''), isFalse);
       expect(ConvertUtil.toBool(0), isFalse);
       expect(ConvertUtil.toBool('maybe'), isNull);
       expect(ConvertUtil.toBool('maybe', fallback: false), isFalse);

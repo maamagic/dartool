@@ -2,7 +2,7 @@ import 'package:dartool/dartool.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('CollectionUtil 判空', () {
+  group('CollectionUtil ', () {
     test('isEmpty / isNotEmpty', () {
       expect(CollectionUtil.isEmpty(null), isTrue);
       expect(CollectionUtil.isEmpty(<int>[]), isTrue);
@@ -11,8 +11,8 @@ void main() {
     });
   });
 
-  group('CollectionUtil 变换', () {
-    test('distinct 保持顺序去重', () {
+  group('CollectionUtil ', () {
+    test('distinct ', () {
       expect(CollectionUtil.distinct([3, 1, 3, 2, 1]), [3, 1, 2]);
     });
 
@@ -60,7 +60,7 @@ void main() {
     });
   });
 
-  group('CollectionUtil 取元素', () {
+  group('CollectionUtil  ', () {
     test('firstOrNull / lastOrNull / elementAtOrNull', () {
       expect(CollectionUtil.firstOrNull(<int>[]), isNull);
       expect(CollectionUtil.firstOrNull([1, 2]), 1);

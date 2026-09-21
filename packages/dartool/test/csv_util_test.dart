@@ -37,7 +37,7 @@ void main() {
       expect(rows.single[1], 'b\nc');
     });
 
-    test('empty input → empty list', () {
+    test('empty input  empty list', () {
       expect(CsvUtil.parse(''), isEmpty);
     });
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 /// JSON encode / decode utilities with safe fallbacks and pretty printing.
 ///
-/// Uses `dart:convert` from the standard library — no extra dependencies.
+/// Uses `dart:convert` from the standard library  no extra dependencies.
 abstract final class JsonUtil {
   JsonUtil._();
 

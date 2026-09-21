@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 
 /// Cross-platform path manipulation helpers (pure Dart, zero dependencies).
 ///
@@ -84,7 +84,7 @@ abstract final class PathUtil {
 
   /// Filename (last segment) of [path].
   ///
-  /// `baseName('a/b/c.txt')` 鈫?`c.txt`, `baseName('a/b/c.txt', '.txt')` 鈫?`c`.
+  /// `baseName('a/b/c.txt')` ?`c.txt`, `baseName('a/b/c.txt', '.txt')` ?`c`.
   static String baseName(String path, [String? suffix]) {
     final parts = split(path);
     if (parts.isEmpty) return '';
@@ -97,7 +97,7 @@ abstract final class PathUtil {
 
   /// Directory part of [path].
   ///
-  /// `dirName('a/b/c.txt')` 鈫?`a/b`.
+  /// `dirName('a/b/c.txt')` ?`a/b`.
   static String dirName(String path) {
     final sepIdx = path.lastIndexOf(separator);
     final slashIdx = path.lastIndexOf('/');

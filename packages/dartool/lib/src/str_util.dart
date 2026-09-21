@@ -33,7 +33,7 @@ abstract final class StrUtil {
   /// Convert `snake_case` / `kebab-case` / space-separated / PascalCase
   /// strings to camelCase.
   ///
-  /// Example: `hello_world` / `hello-world` / `HelloWorld` �?`helloWorld`.
+  /// Example: `hello_world` / `hello-world` / `HelloWorld` ?`helloWorld`.
   static String toCamelCase(String str) {
     final words = _splitWords(str);
     if (words.isEmpty) return '';
@@ -47,19 +47,19 @@ abstract final class StrUtil {
 
   /// Convert any casing form to `snake_case`.
   ///
-  /// Example: `HelloWorld` / `hello-world` �?`hello_world`.
+  /// Example: `HelloWorld` / `hello-world` ?`hello_world`.
   static String toSnakeCase(String str) =>
       _splitWords(str).map((w) => w.toLowerCase()).join('_');
 
   /// Convert any casing form to `kebab-case`.
   ///
-  /// Example: `HelloWorld` / `hello_world` �?`hello-world`.
+  /// Example: `HelloWorld` / `hello_world` ?`hello-world`.
   static String toKebabCase(String str) =>
       _splitWords(str).map((w) => w.toLowerCase()).join('-');
 
   /// Convert any casing form to `PascalCase`.
   ///
-  /// Example: `hello_world` / `hello-world` �?`HelloWorld`.
+  /// Example: `hello_world` / `hello-world` ?`HelloWorld`.
   static String toPascalCase(String str) => _splitWords(
     str,
   ).map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase()).join();
@@ -67,7 +67,7 @@ abstract final class StrUtil {
   /// Split [str] into individual words, honouring `_`, `-`, whitespace and
   /// camelCase / PascalCase boundaries.
   ///
-  /// Example: `helloWorld-foo_bar` �?`['hello', 'World', 'foo', 'bar']`.
+  /// Example: `helloWorld-foo_bar` ?`['hello', 'World', 'foo', 'bar']`.
   static List<String> toWords(String str) => _splitWords(str);
 
   // ---------------------------------------------------------------------------
@@ -151,7 +151,7 @@ abstract final class StrUtil {
   /// Mask the middle part of [str], keeping [left] leading and [right]
   /// trailing characters.
   ///
-  /// Example: `hide('13812345678', 3, 4)` �?`138****5678`.
+  /// Example: `hide('13812345678', 3, 4)` ?`138****5678`.
   static String hide(String str, int left, int right, {String mask = '****'}) {
     if (str.length <= left + right) return mask;
     return str.substring(0, left) + mask + str.substring(str.length - right);

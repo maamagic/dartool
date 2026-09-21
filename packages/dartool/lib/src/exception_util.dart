@@ -25,7 +25,7 @@ class ExceptionUtil {
     return s;
   }
 
-  /// One-line summary — [stringify] prefixed with the runtime type.
+  /// One-line summary  [stringify] prefixed with the runtime type.
   static String summarize(Object? value) {
     if (value == null) return 'null';
     final msg = stringify(value);

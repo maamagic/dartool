@@ -26,7 +26,7 @@ abstract final class TimerUtil {
 
   /// Run [action] for [iterations] times and print/return summary.
   ///
-  /// Example output: `Ran 1000 iterations in 256ms (avg 256µs each)`.
+  /// Example output: `Ran 1000 iterations in 256ms (avg 256s each)`.
   static Duration benchmark(
     void Function() action, {
     int iterations = 1000,
@@ -46,7 +46,7 @@ abstract final class TimerUtil {
     if (printResult) {
       final avgStr = avgUs >= 1000
           ? '${(avgUs / 1000).toStringAsFixed(2)}ms'
-          : '${avgUs.toStringAsFixed(1)}µs';
+          : '${avgUs.toStringAsFixed(1)}s';
       stdout.writeln(
         'Ran $iterations iterations in ${_fmt(total)} (avg $avgStr each)',
       );

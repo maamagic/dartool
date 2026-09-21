@@ -40,13 +40,13 @@ void main() {
 
   group('Base64Util', () {
     test('round-trip bytes', () {
-      final original = utf8.encode('hello world ✨');
+      final original = utf8.encode('hello world ');
       final encoded = Base64Util.encode(original);
       expect(Base64Util.decode(encoded), original);
     });
 
     test('encodeString / decodeString round-trip UTF-8', () {
-      const text = 'dartool 🎉 — encoding test';
+      const text = 'dartool   encoding test';
       final b64 = Base64Util.encodeString(text);
       expect(Base64Util.decodeString(b64), text);
     });

@@ -1,4 +1,4 @@
-/// Platform detection — zero Flutter / package dependency.
+/// Platform detection  zero Flutter / package dependency.
 ///
 /// Uses Dart 3's `dart.library.js_interop` conditional imports so the same
 /// API compiles on every runtime (native VM, Flutter desktop, web, WASM).

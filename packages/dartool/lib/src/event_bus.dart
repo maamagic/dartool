@@ -1,4 +1,4 @@
-/// Tiny synchronous event bus — pub/sub with strong typing.
+/// Tiny synchronous event bus  pub/sub with strong typing.
 ///
 /// ```dart
 /// final bus = EventBus();

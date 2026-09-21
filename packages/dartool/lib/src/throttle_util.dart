@@ -1,4 +1,4 @@
-/// Throttle / debounce helpers — one-shot and reusable versions.
+/// Throttle / debounce helpers  one-shot and reusable versions.
 import 'dart:async';
 
 /// Debounce a function: only the **last** call within [duration] fires.

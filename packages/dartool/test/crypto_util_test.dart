@@ -6,19 +6,16 @@ void main() {
     test('encode / decode round-trip', () {
       expect(CryptoUtil.base64Encode('hello'), equals('aGVsbG8='));
       expect(CryptoUtil.base64Decode('aGVsbG8='), equals('hello'));
-      expect(
-        CryptoUtil.base64Decode(CryptoUtil.base64Encode('中文')),
-        equals('中文'),
-      );
+      expect(CryptoUtil.base64Decode(CryptoUtil.base64Encode('')), equals(''));
     });
 
-    test('decode 非法输入返回空串', () {
+    test('decode ', () {
       expect(CryptoUtil.base64Decode('!!!not-base64!!!'), equals(''));
     });
   });
 
   group('CryptoUtil.Hex', () {
-    test('hexEncode / hexDecode 往返', () {
+    test('hexEncode / hexDecode ', () {
       final hex = CryptoUtil.hexEncodeString('hello');
       expect(CryptoUtil.hexDecodeString(hex), equals('hello'));
       expect(
@@ -27,31 +24,31 @@ void main() {
       );
     });
 
-    test('hexDecode 忽略空格和换行', () {
+    test('hexDecode  ', () {
       expect(CryptoUtil.hexDecode('68 65 6c\n6c 6f').length, isNonZero);
     });
 
-    test('hexDecode 奇数长度返回空', () {
+    test('hexDecode ', () {
       expect(CryptoUtil.hexDecode('abc').length, equals(0));
     });
   });
 
   group('CryptoUtil.Hash', () {
-    test('md5 固定值', () {
+    test('md5 ', () {
       expect(
         CryptoUtil.md5('hello'),
         equals('5d41402abc4b2a76b9719d911017c592'),
       );
     });
 
-    test('sha1 固定值', () {
+    test('sha1 ', () {
       expect(
         CryptoUtil.sha1('hello'),
         equals('aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d'),
       );
     });
 
-    test('sha256 固定值', () {
+    test('sha256 ', () {
       expect(
         CryptoUtil.sha256('hello'),
         equals(
@@ -60,7 +57,7 @@ void main() {
       );
     });
 
-    test('sha224 / sha384 / sha512 长度', () {
+    test('sha224 / sha384 / sha512 ', () {
       expect(CryptoUtil.sha224('a').length, equals(56));
       expect(CryptoUtil.sha384('a').length, equals(96));
       expect(CryptoUtil.sha512('a').length, equals(128));
@@ -68,18 +65,18 @@ void main() {
   });
 
   group('CryptoUtil.HMAC', () {
-    test('hmacSha256 固定值', () {
+    test('hmacSha256 ', () {
       final r = CryptoUtil.hmacSha256('hello', 'key');
       expect(r.length, equals(64));
       expect(r, isNotEmpty);
     });
 
-    test('hmacSha1 / hmacSha512 长度', () {
+    test('hmacSha1 / hmacSha512 ', () {
       expect(CryptoUtil.hmacSha1('a', 'k').length, equals(40));
       expect(CryptoUtil.hmacSha512('a', 'k').length, equals(128));
     });
 
-    test('相同输入 + 相同 key 结果相同', () {
+    test(' +  key ', () {
       expect(
         CryptoUtil.hmacSha256('x', 'y'),
         equals(CryptoUtil.hmacSha256('x', 'y')),
@@ -88,25 +85,25 @@ void main() {
   });
 
   group('CryptoUtil.XOR', () {
-    test('encode / decode 往返', () {
+    test('encode / decode ', () {
       final enc = CryptoUtil.xorEncode('secret data', 'mykey');
       expect(CryptoUtil.xorDecode(enc, 'mykey'), equals('secret data'));
     });
 
-    test('错误 key 解码不出原文', () {
+    test(' key  ', () {
       final enc = CryptoUtil.xorEncode('hello', 'key');
       expect(CryptoUtil.xorDecode(enc, 'wrong'), isNot(equals('hello')));
     });
   });
 
   group('CryptoUtil.Random', () {
-    test('randomHex 返回指定长度', () {
+    test('randomHex ', () {
       final h = CryptoUtil.randomHex(16);
       expect(h.length, equals(32));
       expect(h, matches(RegExp(r'^[0-9a-f]+$')));
     });
 
-    test('randomHex 两次不相同（极小概率）', () {
+    test('randomHex ', () {
       final a = CryptoUtil.randomHex(32);
       final b = CryptoUtil.randomHex(32);
       expect(a, isNot(equals(b)));

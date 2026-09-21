@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('IdUtil', () {
-    test('uuid 符合 v4 格式', () {
+    test('uuid  v4  ', () {
       final id = IdUtil.uuid();
       expect(
         RegExp(
@@ -13,13 +13,13 @@ void main() {
       );
     });
 
-    test('simpleUuid 无连字符且 32 位', () {
+    test('simpleUuid   32 ', () {
       final id = IdUtil.simpleUuid();
       expect(id.length, 32);
       expect(id.contains('-'), isFalse);
     });
 
-    test('randomId 长度与字符集', () {
+    test('randomId ', () {
       expect(IdUtil.randomId(8).length, 8);
       expect(IdUtil.randomId(16, charset: 'ab').length, 16);
       expect(
@@ -34,7 +34,7 @@ void main() {
   });
 
   group('SnowflakeIdGenerator', () {
-    test('ID 单调递增且位数合法', () {
+    test('ID ', () {
       final gen = IdUtil.snowflake(workerId: 1);
       var prev = gen.nextId();
       for (var i = 0; i < 1000; i++) {
@@ -45,12 +45,12 @@ void main() {
       }
     });
 
-    test('workerId 越界抛异常', () {
+    test('workerId ', () {
       expect(() => IdUtil.snowflake(workerId: 1024), throwsArgumentError);
       expect(() => IdUtil.snowflake(workerId: -1), throwsArgumentError);
     });
 
-    test('同毫秒内序列自增不重复', () {
+    test('', () {
       final gen = IdUtil.snowflake();
       final set = <int>{};
       for (var i = 0; i < 5000; i++) {

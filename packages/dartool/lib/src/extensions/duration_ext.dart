@@ -2,7 +2,7 @@
 extension DartoolDuration on Duration {
   /// Format as compact human-readable like `2h30m` or `15s`.
   ///
-  /// [dropZeroLeading] omits leading zero components (e.g. `0h5m` → `5m`).
+  /// [dropZeroLeading] omits leading zero components (e.g. `0h5m`  `5m`).
   String formatCompact({bool dropZeroLeading = true}) {
     final hours = inHours;
     final minutes = inMinutes.remainder(60);

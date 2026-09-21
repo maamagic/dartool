@@ -29,7 +29,7 @@ class Mutex {
       try {
         await previous;
       } catch (_) {
-        // swallow errors from earlier protect calls �?they already propagated
+        // swallow errors from earlier protect calls ?they already propagated
       }
     }
 

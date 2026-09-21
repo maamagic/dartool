@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-/// Number utilities — clamp, rounding, formatting, safe parsing.
+/// Number utilities  clamp, rounding, formatting, safe parsing.
 abstract final class NumUtil {
   NumUtil._();
 
@@ -35,7 +35,7 @@ abstract final class NumUtil {
   /// Round [value] to [decimal] places (positive = keep decimals, negative =
   /// round to tens/hundreds).
   ///
-  /// Examples: `round(3.1415, 2) → 3.14`, `round(1234.0, -2) → 1200`.
+  /// Examples: `round(3.1415, 2)  3.14`, `round(1234.0, -2)  1200`.
   static double round(num value, {int decimal = 0}) {
     final pow = math.pow(10, decimal);
     return (value * pow).roundToDouble() / pow;
@@ -121,8 +121,8 @@ abstract final class NumUtil {
 
   /// Format a number with thousand separators (default `,`).
   ///
-  /// Examples: `formatThousand(1234567) → '1,234,567'`,
-  /// `formatThousand(1234.5, fractionalDigits: 2) → '1,234.50'`.
+  /// Examples: `formatThousand(1234567)  '1,234,567'`,
+  /// `formatThousand(1234.5, fractionalDigits: 2)  '1,234.50'`.
   static String formatThousand(
     num value, {
     int fractionalDigits = 0,
@@ -154,9 +154,9 @@ abstract final class NumUtil {
     return fracPart.isEmpty ? head : '$head$decimalPoint$fracPart';
   }
 
-  /// Byte-size → human-readable string.
+  /// Byte-size  human-readable string.
   ///
-  /// Example: `formatBytes(1536) → '1.5 KB'`.
+  /// Example: `formatBytes(1536)  '1.5 KB'`.
   static String formatBytes(int bytes, {int decimals = 1}) {
     if (bytes < 1024) return '$bytes B';
     const units = ['KB', 'MB', 'GB', 'TB', 'PB'];

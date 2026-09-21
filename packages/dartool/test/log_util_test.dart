@@ -32,7 +32,7 @@ void main() {
       // just ensure no exception when invoking with the custom formatter
       LogUtil.level = LogLevel.info;
       LogUtil.i('NET', 'connected');
-      // captured not checked because we don't mock stdout — but the formatter
+      // captured not checked because we don't mock stdout  but the formatter
       // callback proves the hook runs
       expect(captured, isNull);
     });

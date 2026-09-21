@@ -37,7 +37,7 @@ abstract final class ColorUtil {
   /// Blue channel [0, 255].
   static int blue(int color) => color & _maskB;
 
-  /// Returns `[a, r, g, b]` — each in [0, 255].
+  /// Returns `[a, r, g, b]`  each in [0, 255].
   static List<int> argb(int color) => [
     alpha(color),
     red(color),

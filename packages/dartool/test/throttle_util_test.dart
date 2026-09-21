@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Debouncer', () {
-    test('multiple rapid calls → only the last fires', () async {
+    test('multiple rapid calls  only the last fires', () async {
       final d = Debouncer(duration: Duration(milliseconds: 30));
       var fired = 0;
       d.run(() => fired++);

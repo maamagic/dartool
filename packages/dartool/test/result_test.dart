@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Result', () {
-    test('success / failure 语义', () {
+    test('success / failure ', () {
       final ok = Result<int>.success(42);
       final bad = Result<int>.failure('boom', Exception('detail'));
       expect(ok.isSuccess, isTrue);

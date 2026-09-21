@@ -105,7 +105,7 @@ abstract final class DateUtil {
   static DateTime startOfDay(DateTime dt) =>
       DateTime(dt.year, dt.month, dt.day);
 
-  /// End of the day containing [dt] — `23:59:59.999`.
+  /// End of the day containing [dt]  `23:59:59.999`.
   static DateTime endOfDay(DateTime dt) =>
       DateTime(dt.year, dt.month, dt.day, 23, 59, 59, 999);
 
@@ -142,7 +142,7 @@ abstract final class DateUtil {
     return '${diff.inDays ~/ 365} year${diff.inDays ~/ 365 == 1 ? '' : 's'} ago';
   }
 
-  /// English weekday name: "Monday" … "Sunday".
+  /// English weekday name: "Monday"  "Sunday".
   static String weekdayName(DateTime dt) => switch (dt.weekday) {
     1 => 'Monday',
     2 => 'Tuesday',
@@ -193,7 +193,7 @@ abstract final class DateUtil {
   /// Add [months] calendar months to [dt]. Day values that overflow the
   /// resulting month are clamped to the last valid day.
   ///
-  /// Example: `addMonths(2024-01-31, 1)` → `2024-02-29` (leap year clamped).
+  /// Example: `addMonths(2024-01-31, 1)`  `2024-02-29` (leap year clamped).
   static DateTime addMonths(DateTime dt, int months) {
     final total = dt.month - 1 + months;
     final year = dt.year + total ~/ 12;

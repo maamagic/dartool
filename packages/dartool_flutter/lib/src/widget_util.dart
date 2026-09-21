@@ -16,7 +16,7 @@ abstract final class WidgetUtil {
   // SizedBox shorthands
   // ---------------------------------------------------------------------------
 
-  /// `SizedBox.shrink()` — zero-size placeholder.
+  /// `SizedBox.shrink()`  zero-size placeholder.
   static const Widget none = SizedBox.shrink();
 
   /// Horizontal gap, default 8.

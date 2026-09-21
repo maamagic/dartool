@@ -1,6 +1,6 @@
 import 'date_util.dart';
 
-/// Safe type-conversion utilities with graceful fallbacks — never throws.
+/// Safe type-conversion utilities with graceful fallbacks  never throws.
 ///
 /// Converts between `int`, `double`, `bool`, `String`, `DateTime` and `List`,
 /// picking sensible defaults when parsing fails.
@@ -51,8 +51,8 @@ abstract final class ConvertUtil {
     if (v is num) return v != 0;
     if (v is String) {
       final t = v.trim().toLowerCase();
-      if (const {'true', '1', 'yes', 'y', '是'}.contains(t)) return true;
-      if (const {'false', '0', 'no', 'n', '否'}.contains(t)) return false;
+      if (const {'true', '1', 'yes', 'y'}.contains(t)) return true;
+      if (const {'false', '0', 'no', 'n', ''}.contains(t)) return false;
       return fallback;
     }
     return fallback;

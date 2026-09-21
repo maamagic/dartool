@@ -119,7 +119,7 @@ abstract final class CryptoUtil {
       _hmac(input, key, c.sha512);
 
   // ---------------------------------------------------------------------------
-  // Simple XOR obfuscation (NOT for security — light masking only)
+  // Simple XOR obfuscation (NOT for security  light masking only)
   // ---------------------------------------------------------------------------
 
   /// XOR-obfuscate a UTF-8 string with a repeating key, returned as Base64.

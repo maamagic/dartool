@@ -1,4 +1,4 @@
-/// Token-bucket rate limiter — smooths bursts while enforcing an average rate.
+/// Token-bucket rate limiter  smooths bursts while enforcing an average rate.
 class RateLimiter {
   RateLimiter({required this.tokensPerSecond, int? maxTokens})
     : maxTokens = maxTokens ?? (tokensPerSecond * 2).clamp(1, 1 << 20).toInt() {

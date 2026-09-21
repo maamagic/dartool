@@ -1,4 +1,4 @@
-/// Money helpers — fixed-precision arithmetic that avoids double rounding.
+/// Money helpers  fixed-precision arithmetic that avoids double rounding.
 ///
 /// Internally amounts are stored as **cents** (an `int`), so `0.1 + 0.2`
 /// really does equal `0.3`. Use [format] / [formatWithCurrency] for display.

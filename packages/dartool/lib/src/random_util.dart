@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-/// Random value generators — strings, ints, doubles, UUID-style IDs,
+/// Random value generators  strings, ints, doubles, UUID-style IDs,
 /// weighted pickers, shuffles, etc.
 abstract final class RandomUtil {
   RandomUtil._();

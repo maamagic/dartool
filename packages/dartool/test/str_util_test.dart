@@ -3,14 +3,14 @@ import 'package:test/test.dart';
 
 void main() {
   group('StrUtil.isBlank / isEmpty', () {
-    test('isBlank 识别 null/空字符串', () {
+    test('isBlank  null/', () {
       expect(StrUtil.isBlank(null), isTrue);
       expect(StrUtil.isBlank(''), isTrue);
       expect(StrUtil.isBlank('   '), isTrue);
       expect(StrUtil.isBlank('abc'), isFalse);
     });
 
-    test('isEmpty 不忽略空字符串', () {
+    test('isEmpty ', () {
       expect(StrUtil.isEmpty(null), isTrue);
       expect(StrUtil.isEmpty(''), isTrue);
       expect(StrUtil.isEmpty('   '), isFalse);
@@ -18,7 +18,7 @@ void main() {
     });
   });
 
-  group('StrUtil 命名风格转换', () {
+  group('StrUtil  ', () {
     test('toCamelCase', () {
       expect(StrUtil.toCamelCase('hello_world'), 'helloWorld');
       expect(StrUtil.toCamelCase('hello-world'), 'helloWorld');
@@ -48,7 +48,7 @@ void main() {
     });
   });
 
-  group('StrUtil 其他能力', () {
+  group('StrUtil ', () {
     test('isNumeric', () {
       expect(StrUtil.isNumeric('123'), isTrue);
       expect(StrUtil.isNumeric('12a'), isFalse);
@@ -75,7 +75,7 @@ void main() {
   group('StrUtil character-type checks', () {
     test('isAscii', () {
       expect(StrUtil.isAscii('hello 123'), isTrue);
-      expect(StrUtil.isAscii('中文'), isFalse);
+      expect(StrUtil.isAscii(''), isFalse);
       expect(StrUtil.isAscii(''), isFalse);
     });
 

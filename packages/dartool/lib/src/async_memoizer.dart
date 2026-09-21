@@ -1,7 +1,7 @@
 import 'dart:async';
 
 /// A one-shot async computation that caches its future value. All callers
-/// receive the same [Future] — the function is called at most once, no
+/// receive the same [Future]  the function is called at most once, no
 /// matter how many times [call] is invoked concurrently.
 ///
 /// Useful for expensive initialization or network fetches that should run
@@ -110,7 +110,7 @@ Future<T?> withTimeout<T>(
   return completer.future;
 }
 
-/// Like [Future.wait] but short-circuits as soon as *any* future fails —
+/// Like [Future.wait] but short-circuits as soon as *any* future fails
 /// cancels the rest and propagates the error.
 ///
 /// This is the "fast-fail" analogue of [Future.wait].

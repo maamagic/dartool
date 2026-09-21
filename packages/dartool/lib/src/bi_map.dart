@@ -1,4 +1,4 @@
-/// Bidirectional map — every value has a unique key too.
+/// Bidirectional map  every value has a unique key too.
 ///
 /// ```dart
 /// final map = BiMap<String, int>();
@@ -18,7 +18,7 @@ class BiMap<K, V> {
 
   V? operator [](K key) => _forward[key];
 
-  /// Insert a [key] → [value] pair. If either the key or value already
+  /// Insert a [key]  [value] pair. If either the key or value already
   /// exists it is overwritten (both directions are kept consistent).
   void operator []=(K key, V value) {
     _backward.remove(_forward[key]);
@@ -27,7 +27,7 @@ class BiMap<K, V> {
     _backward[value] = key;
   }
 
-  /// The inverse view — maps value → key. The returned map is a live view
+  /// The inverse view  maps value  key. The returned map is a live view
   /// backed by the BiMap, so mutations through it are NOT supported.
   Map<V, K> get inverse => Map<V, K>.unmodifiable(_backward);
 

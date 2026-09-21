@@ -1,5 +1,5 @@
 # dartool A Hutool-style toolkit for Dart
-#name: dartool
+name: dartool
 description: 'A Hutool-style toolkit for Dart: strings, collections, dates, regex, validation, conversion and more.'
 repository: https://github.com/maamagic/dartool
 homepage: https://github.com/maamagic/dartool/tree/main/packages/dartool

@@ -1,0 +1,43 @@
+# dartool 工作区根 pubspec —— 仅用于 melos 管理，不发布
+name: dartool_workspace
+publish_to: none
+version: 0.1.0-dev
+
+environment:
+  sdk: ^3.9.0
+
+dev_dependencies:
+  melos: ^8.8.0
+
+# melos 8 工作区声明：子包目录列表（Dart 3.11 起才支持 glob）
+workspace:
+  - packages/dartool
+  - packages/dartool_flutter
+
+# melos 8 脚本（由 melos run <name> 调用）
+melos:
+  scripts:
+    # 静态分析所有包
+    analyze:
+      run: melos exec -- "dart analyze ."
+      description: Run dart analyze in all packages.
+
+    # 运行所有包测试（纯 Dart 包用 dart test，Flutter 包用 flutter test）
+    test:
+      run: |
+        melos exec --scope="dartool" -- "dart test"
+        melos exec --scope="dartool_flutter" -- "flutter test"
+      description: Run tests in all packages.
+
+    # 代码格式检查
+    format:
+      run: dart format --set-exit-if-changed packages
+      description: Check code formatting.
+
+    # 发布前检查（分析 + 测试 + 格式化）
+    pre_publish:
+      run: |
+        melos run analyze
+        melos run test
+        melos run format
+      description: Full check before publishing.

@@ -23,13 +23,28 @@ void main() {
       expect(StrUtil.toCamelCase('hello_world'), 'helloWorld');
       expect(StrUtil.toCamelCase('hello-world'), 'helloWorld');
       expect(StrUtil.toCamelCase('hello world'), 'helloWorld');
+      expect(StrUtil.toCamelCase('HelloWorld'), 'helloWorld');
       expect(StrUtil.toCamelCase(''), '');
     });
 
-    test('toSnakeCase / toKebabCase', () {
+    test('toSnakeCase / toKebabCase / toPascalCase', () {
       expect(StrUtil.toSnakeCase('helloWorld'), 'hello_world');
       expect(StrUtil.toSnakeCase('HelloWorld'), 'hello_world');
       expect(StrUtil.toKebabCase('helloWorld'), 'hello-world');
+      expect(StrUtil.toPascalCase('hello_world'), 'HelloWorld');
+      expect(StrUtil.toPascalCase('hello-world'), 'HelloWorld');
+      expect(StrUtil.toPascalCase('helloWorld'), 'HelloWorld');
+    });
+
+    test('toWords splits any casing', () {
+      expect(StrUtil.toWords('helloWorld-foo_bar'), [
+        'hello',
+        'World',
+        'foo',
+        'bar',
+      ]);
+      expect(StrUtil.toWords('HelloWorld'), ['Hello', 'World']);
+      expect(StrUtil.toWords(''), isEmpty);
     });
   });
 

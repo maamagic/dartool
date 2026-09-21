@@ -30,48 +30,74 @@ abstract final class StrUtil {
   /// Null-safe lowercase conversion; returns `''` when input is `null`.
   static String toLowerCase(String? str) => str?.toLowerCase() ?? '';
 
-  /// Convert `snake_case` / `kebab-case` / space-separated strings to camelCase.
+  /// Convert `snake_case` / `kebab-case` / space-separated / PascalCase
+  /// strings to camelCase.
   ///
-  /// Example: `hello_world` / `hello-world` / `hello world` → `helloWorld`.
+  /// Example: `hello_world` / `hello-world` / `HelloWorld` → `helloWorld`.
   static String toCamelCase(String str) {
-    if (str.isEmpty) return str;
-    final parts = str
-        .split(RegExp(r'[_\-\s]+'))
-        .where((p) => p.isNotEmpty)
-        .toList();
-    if (parts.isEmpty) return '';
-    final first = parts.first;
-    final lowerFirst =
-        first[0].toLowerCase() + first.substring(1).toLowerCase();
-    final rest = parts
+    final words = _splitWords(str);
+    if (words.isEmpty) return '';
+    final first = words.first.toLowerCase();
+    final rest = words
         .skip(1)
-        .map((p) => p[0].toUpperCase() + p.substring(1).toLowerCase())
+        .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
         .join();
-    return lowerFirst + rest;
+    return first + rest;
   }
 
-  /// Convert camelCase to `snake_case`.
+  /// Convert any casing form to `snake_case`.
   ///
-  /// Example: `helloWorld` → `hello_world`.
-  static String toSnakeCase(String str) {
-    if (str.isEmpty) return str;
-    final runes = str.runes.toList();
-    final sb = StringBuffer();
-    for (var i = 0; i < runes.length; i++) {
-      final ch = String.fromCharCode(runes[i]);
-      if (i > 0 && ch == ch.toUpperCase() && ch != ch.toLowerCase()) {
-        sb.write('_');
-      }
-      sb.write(ch.toLowerCase());
-    }
-    return sb.toString();
-  }
+  /// Example: `HelloWorld` / `hello-world` → `hello_world`.
+  static String toSnakeCase(String str) =>
+      _splitWords(str).map((w) => w.toLowerCase()).join('_');
 
-  /// Convert camelCase to `kebab-case`.
+  /// Convert any casing form to `kebab-case`.
   ///
-  /// Example: `helloWorld` → `hello-world`.
+  /// Example: `HelloWorld` / `hello_world` → `hello-world`.
   static String toKebabCase(String str) =>
-      toSnakeCase(str).replaceAll('_', '-');
+      _splitWords(str).map((w) => w.toLowerCase()).join('-');
+
+  /// Convert any casing form to `PascalCase`.
+  ///
+  /// Example: `hello_world` / `hello-world` → `HelloWorld`.
+  static String toPascalCase(String str) => _splitWords(
+    str,
+  ).map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase()).join();
+
+  /// Split [str] into individual words, honouring `_`, `-`, whitespace and
+  /// camelCase / PascalCase boundaries.
+  ///
+  /// Example: `helloWorld-foo_bar` → `['hello', 'World', 'foo', 'bar']`.
+  static List<String> toWords(String str) => _splitWords(str);
+
+  // ---------------------------------------------------------------------------
+  // Internal
+  // ---------------------------------------------------------------------------
+
+  /// Tokenize any string into a clean list of lowercased words.
+  static List<String> _splitWords(String str) {
+    if (str.isEmpty) return const <String>[];
+    // First split on explicit separators
+    final withSeparators = str.split(RegExp(r'[_\-\s]+'));
+    final out = <String>[];
+    final upper = RegExp(r'[A-Z]');
+    for (final raw in withSeparators) {
+      if (raw.isEmpty) continue;
+      // Split camelCase / PascalCase boundaries
+      final buffer = StringBuffer();
+      for (var i = 0; i < raw.length; i++) {
+        final ch = raw[i];
+        if (i > 0 && upper.hasMatch(ch) && !upper.hasMatch(raw[i - 1])) {
+          out.add(buffer.toString());
+          buffer.clear();
+        }
+        buffer.write(ch);
+      }
+      if (buffer.isNotEmpty) out.add(buffer.toString());
+    }
+    // Drop entries that became empty after splitting
+    return out.where((w) => w.isNotEmpty).toList();
+  }
 
   /// Null-safe whitespace trimming.
   static String trim(String? str) => str?.trim() ?? '';

@@ -81,4 +81,70 @@ void main() {
       expect(DateUtil.weekdayName(DateTime(2026, 9, 21)), 'Monday');
     });
   });
+
+  group('DateUtil date arithmetic', () {
+    test('daysBetween absolute', () {
+      expect(
+        DateUtil.daysBetween(DateTime(2026, 9, 20), DateTime(2026, 9, 22)),
+        2,
+      );
+      expect(
+        DateUtil.daysBetween(DateTime(2026, 9, 22), DateTime(2026, 9, 20)),
+        2,
+      );
+    });
+
+    test('addDays', () {
+      expect(DateUtil.addDays(DateTime(2026, 9, 21), 3), DateTime(2026, 9, 24));
+    });
+
+    test('addMonths clamps to last valid day', () {
+      expect(
+        DateUtil.addMonths(DateTime(2024, 1, 31), 1),
+        DateTime(2024, 2, 29),
+      );
+      expect(
+        DateUtil.addMonths(DateTime(2023, 1, 31), 1),
+        DateTime(2023, 2, 28),
+      );
+      expect(
+        DateUtil.addMonths(DateTime(2024, 12, 15), 2),
+        DateTime(2025, 2, 15),
+      );
+    });
+
+    test('addYears uses addMonths underneath', () {
+      expect(
+        DateUtil.addYears(DateTime(2024, 2, 29), 1),
+        DateTime(2025, 2, 28),
+      );
+      expect(DateUtil.addYears(DateTime(2024, 1, 1), 2), DateTime(2026, 1, 1));
+    });
+
+    test('copyWith replaces individual fields', () {
+      final dt = DateTime(2026, 9, 21, 14, 5, 7);
+      expect(
+        DateUtil.copyWith(dt, year: 2027),
+        DateTime(2027, 9, 21, 14, 5, 7),
+      );
+      expect(
+        DateUtil.copyWith(dt, month: 12, day: 31),
+        DateTime(2026, 12, 31, 14, 5, 7),
+      );
+      expect(DateUtil.copyWith(dt), dt);
+    });
+
+    test('isToday / isYesterday / isTomorrow / isThisYear', () {
+      final now = DateTime.now();
+      expect(DateUtil.isToday(now), isTrue);
+      expect(DateUtil.isToday(now.subtract(const Duration(days: 1))), isFalse);
+      expect(
+        DateUtil.isYesterday(now.subtract(const Duration(days: 1))),
+        isTrue,
+      );
+      expect(DateUtil.isTomorrow(now.add(const Duration(days: 1))), isTrue);
+      expect(DateUtil.isThisYear(now), isTrue);
+      expect(DateUtil.isThisYear(DateTime(now.year - 1, 1, 1)), isFalse);
+    });
+  });
 }

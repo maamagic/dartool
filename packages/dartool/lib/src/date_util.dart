@@ -154,7 +154,102 @@ abstract final class DateUtil {
     _ => '',
   };
 
+  // ---------------------------------------------------------------------------
+  // Relative predicates (against DateTime.now())
+  // ---------------------------------------------------------------------------
+
+  /// Whether [dt] is on today's calendar day.
+  static bool isToday(DateTime dt) => isSameDay(dt, DateTime.now());
+
+  /// Whether [dt] is on yesterday's calendar day.
+  static bool isYesterday(DateTime dt) =>
+      isSameDay(dt, DateTime.now().subtract(const Duration(days: 1)));
+
+  /// Whether [dt] is on tomorrow's calendar day.
+  static bool isTomorrow(DateTime dt) =>
+      isSameDay(dt, DateTime.now().add(const Duration(days: 1)));
+
+  /// Whether [dt] falls in the current month.
+  static bool isThisMonth(DateTime dt) => isSameMonth(dt, DateTime.now());
+
+  /// Whether [dt] falls in the current year.
+  static bool isThisYear(DateTime dt) => dt.year == DateTime.now().year;
+
+  // ---------------------------------------------------------------------------
+  // Date arithmetic
+  // ---------------------------------------------------------------------------
+
+  /// Whole calendar days between [start] and [end], absolute value.
+  ///
+  /// For a signed difference see [betweenDays].
+  static int daysBetween(DateTime start, DateTime end) =>
+      end.difference(start).inDays.abs();
+
+  /// Add [days] calendar days to [dt]. Delegates to [DateTime.add] and
+  /// preserves DST transitions across the added span.
+  static DateTime addDays(DateTime dt, int days) =>
+      dt.add(Duration(days: days));
+
+  /// Add [months] calendar months to [dt]. Day values that overflow the
+  /// resulting month are clamped to the last valid day.
+  ///
+  /// Example: `addMonths(2024-01-31, 1)` → `2024-02-29` (leap year clamped).
+  static DateTime addMonths(DateTime dt, int months) {
+    final total = dt.month - 1 + months;
+    final year = dt.year + total ~/ 12;
+    final month = (total % 12) + 1;
+    final lastDay = _daysInMonth(year, month);
+    final day = dt.day > lastDay ? lastDay : dt.day;
+    return DateTime(
+      year,
+      month,
+      day,
+      dt.hour,
+      dt.minute,
+      dt.second,
+      dt.millisecond,
+      dt.microsecond,
+    );
+  }
+
+  /// Add [years] calendar years to [dt]; Feb 29 in a non-leap target year is
+  /// clamped to Feb 28.
+  static DateTime addYears(DateTime dt, int years) => addMonths(dt, years * 12);
+
+  /// Copy [dt] with individual fields replaced. Omitting a field keeps the
+  /// original value.
+  static DateTime copyWith(
+    DateTime dt, {
+    int? year,
+    int? month,
+    int? day,
+    int? hour,
+    int? minute,
+    int? second,
+    int? millisecond,
+    int? microsecond,
+  }) {
+    return DateTime(
+      year ?? dt.year,
+      month ?? dt.month,
+      day ?? dt.day,
+      hour ?? dt.hour,
+      minute ?? dt.minute,
+      second ?? dt.second,
+      millisecond ?? dt.millisecond,
+      microsecond ?? dt.microsecond,
+    );
+  }
+
   static final RegExp _tokenPattern = RegExp(r'yyyy|SSS|MM|dd|HH|mm|ss');
+
+  static int _daysInMonth(int year, int month) {
+    const lengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (month == 2 && (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))) {
+      return 29;
+    }
+    return lengths[month - 1];
+  }
 
   static int _clamp(int v, int min, int max) =>
       v < min ? min : (v > max ? max : v);

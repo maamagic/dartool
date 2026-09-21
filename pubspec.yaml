@@ -3,6 +3,8 @@ name: dartool_workspace
 publish_to: none
 version: 0.1.0-dev
 repository: https://github.com/maamagic/dartool
+description: A collection of Dart utilities for everyday development:strings, collections, dates, regex,
+  enums, validation, conversion and ID generation.
 
 environment:
   sdk: ^3.9.0

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-dev.2 - 2026-09-21
+
+### Pub.dev scoring fixes
+
+- Shortened `description` in pubspec.yaml and added `homepage` field.
+- Converted README.md and CHANGELOG.md to pure English (no emoji / CJK).
+- Added `example/main.dart`.
+- Bumped `dartool` dependency to `^0.1.0-dev.2`.
+
 ## 0.1.0-dev.1 - 2026-09-21
 
 ### First release on pub.dev

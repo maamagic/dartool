@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0-dev.2 - 2026-09-21
+
+### Pub.dev scoring fixes
+
+- Shortened `description` in pubspec.yaml and added `homepage` field.
+- Converted README.md and CHANGELOG.md to pure English (no emoji / CJK).
+- Added `example/main.dart` for both packages.
+- Added dartdoc comments for `ConvertUtil` and `ValidateUtil` classes.
+- Fixed incorrect API calls in examples and README (`CollectionUtil.distinct`,
+  `Optional.getOrElse`).
+
 ## 0.1.0-dev.1 - 2026-09-21
 
 ### First release on pub.dev

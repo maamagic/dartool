@@ -1,5 +1,6 @@
 library;
 export 'src/async_util.dart';
+export 'src/async_memoizer.dart';
 
 export 'src/bi_map.dart';
 export 'src/collection_util.dart';

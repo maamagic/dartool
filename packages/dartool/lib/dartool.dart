@@ -26,6 +26,7 @@ export 'src/extensions/string_ext.dart';
 export 'src/id_util.dart';
 export 'src/io_util.dart';
 export 'src/json_util.dart';
+export 'src/map_util.dart';
 export 'src/num_util.dart';
 export 'src/optional.dart';
 export 'src/path_util.dart';

@@ -60,4 +60,39 @@ void main() {
       expect(fired, 2);
     });
   });
+
+  group('top-level throttle / debounce', () {
+    test('throttle fires immediately and swallows repeats within window', () {
+      var fired = 0;
+      void handler() => fired++;
+      expect(throttle(Duration(milliseconds: 1000), handler), isTrue);
+      expect(throttle(Duration(milliseconds: 1000), handler), isFalse);
+      expect(throttle(Duration(milliseconds: 1000), handler), isFalse);
+      expect(fired, 1);
+    });
+
+    test('throttle state is per callback identity', () {
+      var fired = 0;
+      expect(throttle(Duration(milliseconds: 1000), () => fired++), isTrue);
+      // a fresh closure has its own slot
+      expect(throttle(Duration(milliseconds: 1000), () => fired++), isTrue);
+      expect(fired, 2);
+    });
+
+    test('throttle reopens after the window', () async {
+      var fired = 0;
+      void handler() => fired++;
+      expect(throttle(Duration(milliseconds: 20), handler), isTrue);
+      await Future<void>.delayed(Duration(milliseconds: 35));
+      expect(throttle(Duration(milliseconds: 20), handler), isTrue);
+      expect(fired, 2);
+    });
+
+    test('debounce fires only once after the duration', () async {
+      var fired = 0;
+      debounce(Duration(milliseconds: 20), () => fired++);
+      await Future<void>.delayed(Duration(milliseconds: 40));
+      expect(fired, 1);
+    });
+  });
 }

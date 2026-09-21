@@ -11,9 +11,11 @@ void main() {
       expect(r.tryAcquire(), isFalse);
     });
 
-    test('blocks burst above maxTokens', () {
+    test('request above maxTokens throws (can never be satisfied)', () {
       final r = RateLimiter(tokensPerSecond: 1, maxTokens: 2);
-      expect(r.tryAcquire(count: 3), isFalse);
+      expect(() => r.tryAcquire(count: 3), throwsArgumentError);
+      expect(() => r.acquire(count: 3), throwsArgumentError);
+      // limiter is still usable afterwards
       expect(r.tryAcquire(count: 2), isTrue);
     });
 
@@ -37,6 +39,33 @@ void main() {
       await Future<void>.delayed(Duration(milliseconds: 60));
       // should have refilled ~6 tokens
       expect(r.available, greaterThanOrEqualTo(5));
+    });
+
+    test('invalid constructor arguments rejected', () {
+      expect(() => RateLimiter(tokensPerSecond: 0), throwsArgumentError);
+      expect(() => RateLimiter(tokensPerSecond: -1), throwsArgumentError);
+      expect(
+        () => RateLimiter(tokensPerSecond: double.nan),
+        throwsArgumentError,
+      );
+      expect(
+        () => RateLimiter(tokensPerSecond: double.infinity),
+        throwsArgumentError,
+      );
+      expect(
+        () => RateLimiter(tokensPerSecond: 1, maxTokens: 0),
+        throwsArgumentError,
+      );
+    });
+
+    test('acquire waits for refill instead of busy-looping forever', () async {
+      final r = RateLimiter(tokensPerSecond: 100, maxTokens: 2);
+      expect(r.tryAcquire(count: 2), isTrue);
+      final sw = Stopwatch()..start();
+      await r.acquire(); // ~10ms for one token
+      sw.stop();
+      expect(sw.elapsedMilliseconds, greaterThanOrEqualTo(8));
+      expect(sw.elapsedMilliseconds, lessThan(500));
     });
   });
 }

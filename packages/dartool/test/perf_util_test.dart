@@ -13,7 +13,9 @@ void main() {
       final fast = PerfUtil.measure(() {});
       final slow = PerfUtil.measure(() {
         var s = 0;
-        for (var i = 0; i < 100000; i++) s += i;
+        for (var i = 0; i < 100000; i++) {
+          s += i;
+        }
         // reference to keep the optimizer from dropping the loop
         if (s < -1) throw 0;
       });
@@ -25,7 +27,9 @@ void main() {
     test('returns min/max/avg all non-negative', () {
       final stats = PerfUtil.benchmark(() {
         var s = 0;
-        for (var i = 0; i < 1000; i++) s += i;
+        for (var i = 0; i < 1000; i++) {
+          s += i;
+        }
         if (s < -1) throw 0;
       }, times: 10);
       expect(stats.min.inMicroseconds, greaterThanOrEqualTo(0));

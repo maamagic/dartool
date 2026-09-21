@@ -136,7 +136,7 @@ abstract final class WidgetUtil {
     Color? contentColor,
   }) {
     final snackBar = SnackBar(
-      content: Text(message),
+      content: Text(message, style: TextStyle(color: contentColor)),
       duration: duration,
       action: action,
       backgroundColor: backgroundColor,

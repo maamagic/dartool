@@ -82,6 +82,32 @@ void main() {
       );
       expect(v, -1);
     });
+
+    test(
+      'default timeout completes with null (regression: never completes)',
+      () async {
+        // The completer used to be Completer<int>; completing it with null in
+        // the Timer callback threw asynchronously and the future never finished.
+        final v = await withTimeout<int>(() async {
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          return 1;
+        }, const Duration(milliseconds: 5));
+        expect(v, isNull);
+      },
+    );
+
+    test('error inside fn propagates instead of hanging', () async {
+      Object? caught;
+      try {
+        await withTimeout<int>(() async {
+          await Future<void>.delayed(const Duration(milliseconds: 1));
+          throw StateError('boom');
+        }, const Duration(seconds: 1));
+      } catch (e) {
+        caught = e;
+      }
+      expect(caught, isStateError);
+    });
   });
 
   group('waitFailFast', () {
@@ -108,5 +134,16 @@ void main() {
     test('empty list returns empty', () async {
       expect(await waitFailFast<int>(const []), isEmpty);
     });
+
+    test(
+      'works for non-nullable reference types (regression: 0 as T)',
+      () async {
+        final r = await waitFailFast<String>([
+          Future.value('a'),
+          Future.value('b'),
+        ]);
+        expect(r, ['a', 'b']);
+      },
+    );
   });
 }

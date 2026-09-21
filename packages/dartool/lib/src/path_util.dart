@@ -1,14 +1,19 @@
-import 'dart:io';
-
 /// Cross-platform path manipulation helpers (pure Dart, zero dependencies).
 ///
 /// These utilities mimic a small subset of `package:path` without pulling in
-/// the extra dependency. On Web, [separator] returns `/`.
+/// the extra dependency. Both `/` and `\` are accepted as separators, and
+/// Windows drive prefixes (`C:`) are recognized. On Web the separator is `/`.
+library;
+
+import 'platform_util.dart';
+
 abstract final class PathUtil {
   PathUtil._();
 
+  static final RegExp _driveRe = RegExp(r'^[a-zA-Z]:');
+
   /// Platform-specific path separator (`\` on Windows, `/` elsewhere).
-  static String get separator => Platform.isWindows ? r'\' : '/';
+  static String get separator => PlatformUtil.isWindows ? r'\' : '/';
 
   // ---------------------------------------------------------------------------
   // Join
@@ -35,10 +40,19 @@ abstract final class PathUtil {
       } else {
         final needSep =
             !p.startsWith(sep) &&
-            (buffer.isEmpty || !buffer.toString().endsWith(sep));
+            !p.startsWith('/') &&
+            !p.startsWith(r'\') &&
+            (buffer.isEmpty ||
+                (!buffer.toString().endsWith(sep) &&
+                    !buffer.toString().endsWith('/') &&
+                    !buffer.toString().endsWith(r'\')));
         if (needSep) buffer.write(sep);
-        // Strip leading separator of subsequent parts
-        buffer.write(p.startsWith(sep) ? p.substring(1) : p);
+        // Strip a leading separator of subsequent parts.
+        if (p.startsWith(sep) || p.startsWith('/') || p.startsWith(r'\')) {
+          buffer.write(p.substring(1));
+        } else {
+          buffer.write(p);
+        }
       }
     }
     return _normalize(buffer.toString());
@@ -49,16 +63,29 @@ abstract final class PathUtil {
   // ---------------------------------------------------------------------------
 
   /// Split [path] into its segments (ignores trailing separator).
+  ///
+  /// A leading `/` or Windows drive prefix (`C:`) is preserved as the first
+  /// segment.
   static List<String> split(String path) {
     if (path.isEmpty) return const <String>[];
     final cleaned = path.replaceAll('\\', '/');
-    final hasRoot = cleaned.startsWith('/');
-    final parts = cleaned.split('/').where((s) => s.isNotEmpty).toList();
-    if (hasRoot && parts.isNotEmpty) {
-      parts.insert(0, '/');
-    } else if (hasRoot) {
-      return ['/'];
+    final drive = _driveRe.firstMatch(cleaned);
+    String root;
+    String rest;
+    if (drive != null) {
+      root = drive.group(0)!;
+      rest = cleaned.substring(drive.end).startsWith('/')
+          ? cleaned.substring(drive.end + 1)
+          : cleaned.substring(drive.end);
+    } else if (cleaned.startsWith('/')) {
+      root = '/';
+      rest = cleaned.substring(1);
+    } else {
+      root = '';
+      rest = cleaned;
     }
+    final parts = rest.split('/').where((s) => s.isNotEmpty).toList();
+    if (root.isNotEmpty) parts.insert(0, root);
     return parts;
   }
 
@@ -71,15 +98,13 @@ abstract final class PathUtil {
   // ---------------------------------------------------------------------------
 
   /// File extension of [path] without the leading dot; returns `''` if none.
+  ///
+  /// Dotfiles such as `.bashrc` have no extension.
   static String extension(String path) {
-    final idx = path.lastIndexOf('.');
-    if (idx < 0 || idx == path.length - 1) return '';
-    // Make sure the dot is in the last segment, not a path separator before it
-    final sepIdx = path.lastIndexOf(separator);
-    final slashIdx = path.lastIndexOf('/');
-    final lastSep = sepIdx > slashIdx ? sepIdx : slashIdx;
-    if (lastSep > idx) return '';
-    return path.substring(idx + 1);
+    final base = baseName(path);
+    final idx = base.lastIndexOf('.');
+    if (idx <= 0 || idx == base.length - 1) return '';
+    return base.substring(idx + 1);
   }
 
   /// Filename (last segment) of [path].
@@ -89,7 +114,7 @@ abstract final class PathUtil {
     final parts = split(path);
     if (parts.isEmpty) return '';
     final name = parts.last;
-    if (suffix != null && name.endsWith(suffix)) {
+    if (suffix != null && suffix.isNotEmpty && name.endsWith(suffix)) {
       return name.substring(0, name.length - suffix.length);
     }
     return name;
@@ -99,12 +124,16 @@ abstract final class PathUtil {
   ///
   /// `dirName('a/b/c.txt')` ?`a/b`.
   static String dirName(String path) {
-    final sepIdx = path.lastIndexOf(separator);
-    final slashIdx = path.lastIndexOf('/');
-    final lastSep = sepIdx > slashIdx ? sepIdx : slashIdx;
-    if (lastSep < 0) return '';
-    if (lastSep == 0) return separator;
-    return path.substring(0, lastSep);
+    final cleaned = path.replaceAll('\\', '/');
+    final slashIdx = cleaned.lastIndexOf('/');
+    if (slashIdx < 0) return '';
+    final drive = _driveRe.firstMatch(cleaned);
+    if (drive != null && slashIdx == drive.end) {
+      // Root directory of a drive, e.g. dirName('C:/foo').
+      return cleaned.substring(0, slashIdx + 1);
+    }
+    if (slashIdx == 0) return '/';
+    return path.substring(0, slashIdx).replaceAll('\\', '/');
   }
 
   // ---------------------------------------------------------------------------
@@ -115,14 +144,22 @@ abstract final class PathUtil {
   static String _normalize(String path) {
     if (path.isEmpty) return '';
     final cleaned = path.replaceAll('\\', '/');
-    final hasRoot = cleaned.startsWith('/');
+    final drive = _driveRe.firstMatch(cleaned);
+    final afterRoot = drive != null
+        ? cleaned.substring(drive.end).startsWith('/')
+              ? cleaned.substring(drive.end + 1)
+              : cleaned.substring(drive.end)
+        : cleaned.startsWith('/')
+        ? cleaned.substring(1)
+        : cleaned;
+    final isRoot = drive != null || cleaned.startsWith('/');
     final parts = <String>[];
-    for (final seg in cleaned.split('/')) {
+    for (final seg in afterRoot.split('/')) {
       if (seg.isEmpty || seg == '.') continue;
       if (seg == '..') {
         if (parts.isNotEmpty && parts.last != '..') {
           parts.removeLast();
-        } else if (!hasRoot) {
+        } else if (!isRoot) {
           parts.add('..');
         }
       } else {
@@ -130,6 +167,7 @@ abstract final class PathUtil {
       }
     }
     final joined = parts.join('/');
-    return hasRoot ? '/$joined' : joined;
+    if (drive != null) return '${drive.group(0)}/$joined';
+    return isRoot ? '/$joined' : joined;
   }
 }

@@ -61,18 +61,28 @@ abstract final class DateUtil {
     final re = RegExp('^${sb.toString()}\$');
     final m = re.firstMatch(text);
     if (m == null) return null;
-    int v(String n) =>
-        names.contains(n) ? int.tryParse(m.namedGroup(n) ?? '') ?? 0 : 0;
-    final year = v('year') == 0 ? 1970 : v('year');
-    return DateTime(
-      year,
-      _clamp(v('month'), 1, 12),
-      _clamp(v('day'), 1, 31),
-      v('hour'),
-      v('minute'),
-      v('second'),
-      v('millis'),
-    );
+    int? v(String n) =>
+        names.contains(n) ? int.tryParse(m.namedGroup(n) ?? '') : null;
+
+    // Fields omitted from [pattern] fall back to epoch-style defaults; fields
+    // present in the input must be valid calendar values (no silent overflow
+    // such as 2024-02-31 -> 2024-03-02).
+    final year = v('year') ?? 1970;
+    final month = v('month') ?? 1;
+    final day = v('day') ?? 1;
+    final hour = v('hour') ?? 0;
+    final minute = v('minute') ?? 0;
+    final second = v('second') ?? 0;
+    final millis = v('millis') ?? 0;
+
+    if (month < 1 || month > 12) return null;
+    if (day < 1 || day > _daysInMonth(year, month)) return null;
+    if (hour < 0 || hour > 23) return null;
+    if (minute < 0 || minute > 59) return null;
+    if (second < 0 || second > 59) return null;
+    if (millis < 0 || millis > 999) return null;
+
+    return DateTime(year, month, day, hour, minute, second, millis);
   }
 
   /// Convert [dt] to a Unix timestamp. Returns seconds by default, or
@@ -127,19 +137,35 @@ abstract final class DateUtil {
 
   /// Human-readable relative time, e.g. "just now", "5 minutes ago",
   /// "2 hours ago", "3 days ago", "2 months ago", "1 year ago".
+  ///
+  /// Future times use the symmetric "in ..." form, e.g. "in a moment",
+  /// "in 5 minutes".
   static String relativeTime(DateTime dt, {DateTime? now}) {
     final ref = now ?? DateTime.now();
-    final diff = ref.difference(dt);
-    if (diff.inSeconds < 60) return 'just now';
-    if (diff.inMinutes < 60)
-      return '${diff.inMinutes} minute${diff.inMinutes == 1 ? '' : 's'} ago';
-    if (diff.inHours < 24)
-      return '${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago';
-    if (diff.inDays < 30)
-      return '${diff.inDays} day${diff.inDays == 1 ? '' : 's'} ago';
-    if (diff.inDays < 365)
-      return '${diff.inDays ~/ 30} month${diff.inDays ~/ 30 == 1 ? '' : 's'} ago';
-    return '${diff.inDays ~/ 365} year${diff.inDays ~/ 365 == 1 ? '' : 's'} ago';
+    final raw = ref.difference(dt);
+    final isFuture = raw.isNegative;
+    final diff = isFuture ? -raw : raw;
+
+    String unit(int value, String name) =>
+        '$value $name${value == 1 ? '' : 's'}';
+    String describe(String body) => isFuture ? 'in $body' : '$body ago';
+
+    if (diff.inSeconds < 60) {
+      return isFuture ? 'in a moment' : 'just now';
+    }
+    if (diff.inMinutes < 60) {
+      return describe(unit(diff.inMinutes, 'minute'));
+    }
+    if (diff.inHours < 24) {
+      return describe(unit(diff.inHours, 'hour'));
+    }
+    if (diff.inDays < 30) {
+      return describe(unit(diff.inDays, 'day'));
+    }
+    if (diff.inDays < 365) {
+      return describe(unit(diff.inDays ~/ 30, 'month'));
+    }
+    return describe(unit(diff.inDays ~/ 365, 'year'));
   }
 
   /// English weekday name: "Monday"  "Sunday".
@@ -250,9 +276,6 @@ abstract final class DateUtil {
     }
     return lengths[month - 1];
   }
-
-  static int _clamp(int v, int min, int max) =>
-      v < min ? min : (v > max ? max : v);
 
   static String _tokenRegex(String name) => switch (name) {
     'year' => r'\d{4}',

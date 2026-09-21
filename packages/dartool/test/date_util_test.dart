@@ -31,6 +31,25 @@ void main() {
     test('parse ', () {
       expect(() => DateUtil.parse('bad'), throwsFormatException);
     });
+
+    test('rejects impossible calendar dates (no rollover)', () {
+      const p = 'yyyy-MM-dd';
+      expect(DateUtil.tryParse('2024-02-31', p), isNull);
+      expect(DateUtil.tryParse('2023-02-29', p), isNull); // 2023 not leap
+      expect(DateUtil.tryParse('2024-13-01', p), isNull);
+      expect(DateUtil.tryParse('2024-00-10', p), isNull);
+      expect(DateUtil.tryParse('2024-04-31', p), isNull);
+      expect(DateUtil.tryParse('2024-12-32', p), isNull);
+      expect(DateUtil.tryParse('2024-02-31 12:00:00'), isNull);
+      // valid leap day still parses
+      expect(DateUtil.tryParse('2024-02-29', p), DateTime(2024, 2, 29));
+    });
+
+    test('rejects out-of-range time components', () {
+      expect(DateUtil.tryParse('2024-01-01 24:00:00'), isNull);
+      expect(DateUtil.tryParse('2024-01-01 12:60:00'), isNull);
+      expect(DateUtil.tryParse('2024-01-01 12:00:60'), isNull);
+    });
   });
 
   group('DateUtil ', () {
@@ -74,6 +93,30 @@ void main() {
       expect(
         DateUtil.relativeTime(now.subtract(Duration(days: 60)), now: now),
         '2 months ago',
+      );
+    });
+
+    test('relativeTime supports future dates', () {
+      final now = DateTime(2026, 9, 21, 12, 0, 0);
+      expect(
+        DateUtil.relativeTime(now.add(Duration(seconds: 5)), now: now),
+        'in a moment',
+      );
+      expect(
+        DateUtil.relativeTime(now.add(Duration(minutes: 5)), now: now),
+        'in 5 minutes',
+      );
+      expect(
+        DateUtil.relativeTime(now.add(Duration(hours: 3)), now: now),
+        'in 3 hours',
+      );
+      expect(
+        DateUtil.relativeTime(now.add(Duration(days: 2)), now: now),
+        'in 2 days',
+      );
+      expect(
+        DateUtil.relativeTime(now.add(Duration(days: 400)), now: now),
+        'in 1 year',
       );
     });
 

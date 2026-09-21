@@ -73,5 +73,38 @@ void main() {
       sem.release();
       expect(sem.availablePermits, 1);
     });
+
+    test('constructor rejects permits below 1', () {
+      expect(() => Semaphore(0), throwsArgumentError);
+      expect(() => Semaphore(-3), throwsArgumentError);
+    });
+
+    test('releasing more times than acquired throws StateError', () {
+      final sem = Semaphore(2);
+      expect(sem.release, throwsStateError); // nothing acquired yet
+      expect(sem.availablePermits, 2); // not inflated past the limit
+      sem.acquire();
+      sem.release();
+      expect(sem.availablePermits, 2);
+      expect(sem.release, throwsStateError);
+    });
+
+    test('queued acquirer is woken by release hand-off', () async {
+      final sem = Semaphore(1);
+      await sem.acquire();
+      var entered = false;
+      final queued = sem.acquire().then((_) => entered = true);
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+      expect(entered, isFalse);
+      // release hands the permit straight to the queued acquirer, so the
+      // permit count stays at 0 and a second release is still legal.
+      sem.release();
+      await queued;
+      expect(entered, isTrue);
+      expect(sem.availablePermits, 0);
+      sem.release();
+      expect(sem.availablePermits, 1);
+      expect(sem.release, throwsStateError);
+    });
   });
 }

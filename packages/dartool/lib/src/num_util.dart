@@ -75,13 +75,20 @@ abstract final class NumUtil {
     return best;
   }
 
-  /// Sum of [values]; returns `0` when empty.
+  /// Sum of [values]; returns `0` for an empty `int` iterable and `0.0` for
+  /// an empty `double` iterable.
+  ///
+  /// Works with both `Iterable<int>` and `Iterable<double>` (an empty
+  /// `Iterable<double>` must yield `0.0`, never a cast failure).
   static T sum<T extends num>(Iterable<T> values) {
-    T total = 0 as T;
+    num total = 0;
     for (final v in values) {
-      total = (total + v) as T;
+      total += v;
     }
-    return total;
+    if (total == 0 && values is Iterable<double>) {
+      return 0.0 as T;
+    }
+    return total as T;
   }
 
   /// Average of [values]; returns `0.0` when empty.

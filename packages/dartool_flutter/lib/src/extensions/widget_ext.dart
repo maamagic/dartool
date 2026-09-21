@@ -61,15 +61,22 @@ extension WidgetX on Widget {
     child: ClipRRect(borderRadius: BorderRadius.circular(radius), child: this),
   );
 
+  /// Wrap with a drop shadow that scales with [elevation] (Material-style:
+  /// vertical offset and blur grow with elevation). Explicit [offset] /
+  /// [blurRadius] override the elevation-derived defaults.
   Widget shadow({
     double elevation = 2,
     Color color = Colors.black26,
-    Offset offset = const Offset(0, 1),
-    double blurRadius = 4,
+    Offset? offset,
+    double? blurRadius,
   }) => Container(
     decoration: BoxDecoration(
       boxShadow: [
-        BoxShadow(color: color, offset: offset, blurRadius: blurRadius),
+        BoxShadow(
+          color: color,
+          offset: offset ?? Offset(0, elevation),
+          blurRadius: blurRadius ?? elevation * 2,
+        ),
       ],
     ),
     child: this,

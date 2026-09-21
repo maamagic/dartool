@@ -38,6 +38,24 @@ void main() {
       expect(NumUtil.sum<int>([]), 0);
       expect(NumUtil.average([]), 0.0);
     });
+
+    test('sum works with double type (regression: 0 as T crash)', () {
+      final total = NumUtil.sum<double>([1.5, 2.5, 3.0]);
+      expect(total, 7.0);
+      expect(total, isA<double>());
+
+      // empty double iterable used to throw "int is not double"
+      final empty = NumUtil.sum<double>(<double>[]);
+      expect(empty, 0.0);
+      expect(empty, isA<double>());
+
+      // strings of doubles must not be coerced to int
+      expect(
+        NumUtil.sum<double>([0.1, 0.2]),
+        closeTo(0.30000000000000004, 1e-12),
+      );
+      expect(NumUtil.sum<int>([1, 2, 3]), isA<int>());
+    });
   });
 
   group('NumUtil parse', () {

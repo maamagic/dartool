@@ -98,6 +98,20 @@ void main() {
       expect(CollectionUtil.averageOf<_Item>([], (e) => e.val), 0.0);
     });
 
+    test('sumOf with double result (regression: 0 as N crash)', () {
+      final items = [_DItem('a', 1.5), _DItem('b', 2.5)];
+      final total = CollectionUtil.sumOf<_DItem, double>(items, (e) => e.val);
+      expect(total, 4.0);
+      expect(total, isA<double>());
+
+      final empty = CollectionUtil.sumOf<_DItem, double>(
+        const <_DItem>[],
+        (e) => e.val,
+      );
+      expect(empty, 0.0);
+      expect(empty, isA<double>());
+    });
+
     test('minOf / maxOf', () {
       final items = [_Item('a', 30), _Item('b', 10), _Item('c', 20)];
       expect(CollectionUtil.minOf(items, (e) => e.val)!.name, 'b');
@@ -130,4 +144,10 @@ class _Item {
   final String name;
   final int val;
   _Item(this.name, this.val);
+}
+
+class _DItem {
+  final String name;
+  final double val;
+  _DItem(this.name, this.val);
 }

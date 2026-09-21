@@ -80,12 +80,15 @@ class LazyFuture<T> {
 /// the result is returned; otherwise [onTimeout] is called (defaults to
 /// returning `null`) and the original Future is dropped (still runs in the
 /// background).
+///
+/// The result is therefore `T?`: a timeout with no [onTimeout] completes with
+/// `null` instead of throwing or hanging forever.
 Future<T?> withTimeout<T>(
   Future<T> Function() fn,
   Duration timeout, {
   T? Function()? onTimeout,
 }) async {
-  final completer = Completer<T>();
+  final completer = Completer<T?>();
   final timer = Timer(timeout, () {
     if (!completer.isCompleted) {
       completer.complete(onTimeout?.call());
@@ -155,6 +158,5 @@ Future<List<T>> waitFailFast<T>(Iterable<Future<T>> futures) async {
     rethrow;
   }
 
-  return List<T>.filled(list.length, 0 as T, growable: false)
-    ..setRange(0, list.length, results.cast<T>());
+  return results.cast<T>();
 }

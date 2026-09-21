@@ -135,24 +135,47 @@ abstract final class MapUtil {
   /// Unflatten a dot-notation map back into a nested structure.
   ///
   /// Example: `{'a.b': 1, 'a.c': 2}`  `{'a': {'b': 1, 'c': 2}}`.
+  ///
+  /// Throws [ArgumentError] when keys conflict (e.g. `{'a': 1, 'a.b': 2}`)
+  /// so data can never be silently overwritten or dropped.
   static Map<String, dynamic> unflatten(
     Map<String, dynamic> source, {
     String separator = '.',
   }) {
+    if (separator.isEmpty) {
+      throw ArgumentError.value(separator, 'separator', 'must not be empty');
+    }
     final root = <String, dynamic>{};
     for (final entry in source.entries) {
       final parts = entry.key.split(separator);
-      dynamic current = root;
+      if (parts.any((p) => p.isEmpty)) {
+        throw ArgumentError(
+          'Invalid key "${entry.key}": contains an empty segment',
+        );
+      }
+      Map<String, dynamic> current = root;
       for (var i = 0; i < parts.length - 1; i++) {
         final part = parts[i];
-        if (current is Map<String, dynamic>) {
-          current[part] ??= <String, dynamic>{};
-          current = current[part];
+        final existing = current[part];
+        if (existing == null) {
+          final next = <String, dynamic>{};
+          current[part] = next;
+          current = next;
+        } else if (existing is Map<String, dynamic>) {
+          current = existing;
+        } else {
+          throw ArgumentError(
+            'Key "${entry.key}" conflicts: "$part" is already a value',
+          );
         }
       }
-      if (current is Map<String, dynamic>) {
-        current[parts.last] = entry.value;
+      final last = parts.last;
+      if (current[last] is Map<String, dynamic>) {
+        throw ArgumentError(
+          'Key "${entry.key}" conflicts: "$last" already has nested keys',
+        );
       }
+      current[last] = entry.value;
     }
     return root;
   }

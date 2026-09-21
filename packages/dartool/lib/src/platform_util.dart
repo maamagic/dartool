@@ -2,6 +2,8 @@
 ///
 /// Uses Dart 3's `dart.library.js_interop` conditional imports so the same
 /// API compiles on every runtime (native VM, Flutter desktop, web, WASM).
+library;
+
 import 'platform_util_io.dart'
     if (dart.library.js_interop) 'platform_util_web.dart'
     as impl;

@@ -74,6 +74,50 @@ void main() {
       expect(parts.every((p) => p.cents <= 1), isTrue);
       expect(parts.fold<int>(0, (s, m) => s + m.cents), 3);
     });
+
+    test('negative split never loses money', () {
+      final parts = Money.fromCents(-100).split(3);
+      expect(parts.fold<int>(0, (s, m) => s + m.cents), -100);
+      // last part carries the extra (negative) cent
+      expect(parts.first.cents, -33);
+      expect(parts.last.cents, -34);
+
+      final parts2 = Money.fromCents(-5).split(3);
+      expect(parts2.fold<int>(0, (s, m) => s + m.cents), -5);
+
+      final even = Money.fromCents(-99).split(3);
+      expect(even.map((m) => m.cents), [-33, -33, -33]);
+    });
+
+    test('split rejects non-positive n', () {
+      expect(() => Money(1).split(0), throwsArgumentError);
+      expect(() => Money(1).split(-2), throwsArgumentError);
+    });
+  });
+
+  group('Money format rounding', () {
+    test('rounds half-up instead of truncating', () {
+      expect(Money(0.59).format(decimals: 1), '0.6');
+      expect(Money(0.54).format(decimals: 1), '0.5');
+      expect(Money(0.55).format(decimals: 1), '0.6');
+      expect(Money(0.49).format(decimals: 0), '0');
+      expect(Money(0.55).format(decimals: 0), '1');
+      expect(Money(-0.55).format(decimals: 0), '-1');
+    });
+
+    test('rounding carry propagates into the integer part', () {
+      expect(Money.fromCents(99).format(decimals: 1), '1.0');
+      expect(Money.fromCents(999).format(decimals: 1), '10.0');
+    });
+
+    test('more decimals than cents zero-pads', () {
+      expect(Money(1).format(decimals: 4), '1.0000');
+      expect(Money(0).format(decimals: 3), '0.000');
+    });
+
+    test('negative decimals rejected', () {
+      expect(() => Money(1).format(decimals: -1), throwsArgumentError);
+    });
   });
 
   group('Money equality / hashCode', () {

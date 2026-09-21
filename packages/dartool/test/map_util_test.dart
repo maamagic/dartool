@@ -86,6 +86,31 @@ void main() {
       // round-trip is lossless only when no intermediate scalar exists
       expect(MapUtil.flatten(nested), flat);
     });
+
+    test('conflicting keys throw instead of silently dropping data', () {
+      expect(
+        () => MapUtil.unflatten(<String, dynamic>{'a.b': 1, 'a': 2}),
+        throwsArgumentError,
+      );
+      expect(
+        () => MapUtil.unflatten(<String, dynamic>{'a': 2, 'a.b': 1}),
+        throwsArgumentError,
+      );
+      expect(
+        () => MapUtil.unflatten(<String, dynamic>{'.b': 1}),
+        throwsArgumentError,
+      );
+      expect(
+        () => MapUtil.unflatten(<String, dynamic>{'a.b': 1}, separator: ''),
+        throwsArgumentError,
+      );
+    });
+
+    test('custom separator works', () {
+      expect(MapUtil.unflatten(<String, dynamic>{'a/b': 1}, separator: '/'), {
+        'a': {'b': 1},
+      });
+    });
   });
 }
 

@@ -1,7 +1,12 @@
-import 'dart:async';
-import 'dart:io';
+/// Simple stopwatch wrapper and timing helpers.
+library;
 
-/// Simple stopwatch wrapper and benchmark helpers.
+import 'dart:async';
+
+import 'console_writer_io.dart'
+    if (dart.library.js_interop) 'console_writer_web.dart'
+    as console;
+
 abstract final class TimerUtil {
   TimerUtil._();
 
@@ -26,7 +31,7 @@ abstract final class TimerUtil {
 
   /// Run [action] for [iterations] times and print/return summary.
   ///
-  /// Example output: `Ran 1000 iterations in 256ms (avg 256s each)`.
+  /// Example output: `Ran 1000 iterations in 256ms (avg 256us each)`.
   static Duration benchmark(
     void Function() action, {
     int iterations = 1000,
@@ -46,9 +51,10 @@ abstract final class TimerUtil {
     if (printResult) {
       final avgStr = avgUs >= 1000
           ? '${(avgUs / 1000).toStringAsFixed(2)}ms'
-          : '${avgUs.toStringAsFixed(1)}s';
-      stdout.writeln(
+          : '${avgUs.toStringAsFixed(1)}us';
+      console.consoleWriteLine(
         'Ran $iterations iterations in ${_fmt(total)} (avg $avgStr each)',
+        isError: false,
       );
     }
     return total;

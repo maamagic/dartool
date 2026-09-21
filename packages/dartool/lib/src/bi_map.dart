@@ -20,9 +20,15 @@ class BiMap<K, V> {
 
   /// Insert a [key]  [value] pair. If either the key or value already
   /// exists it is overwritten (both directions are kept consistent).
+  ///
+  /// Works even when the value type is nullable and `value` is `null`.
   void operator []=(K key, V value) {
-    _backward.remove(_forward[key]);
-    _forward.remove(_backward[value]);
+    if (_forward.containsKey(key)) {
+      _backward.remove(_forward[key]);
+    }
+    if (_backward.containsKey(value) && _backward[value] != key) {
+      _forward.remove(_backward[value]);
+    }
     _forward[key] = value;
     _backward[value] = key;
   }
@@ -35,13 +41,17 @@ class BiMap<K, V> {
   bool containsValue(V value) => _backward.containsKey(value);
 
   void remove(K key) {
-    final v = _forward.remove(key);
-    if (v != null) _backward.remove(v);
+    if (!_forward.containsKey(key)) return;
+    final V value = _forward[key] as V;
+    _forward.remove(key);
+    if (_backward[value] == key) _backward.remove(value);
   }
 
   void removeValue(V value) {
-    final k = _backward.remove(value);
-    if (k != null) _forward.remove(k);
+    if (!_backward.containsKey(value)) return;
+    final K key = _backward[value] as K;
+    _backward.remove(value);
+    if (_forward[key] == value) _forward.remove(key);
   }
 
   void clear() {

@@ -1,7 +1,9 @@
 /// Simple in-memory LRU cache with optional time-to-live.
 class LruCache<K, V> {
   LruCache({required this.capacity, this.ttl}) {
-    assert(capacity > 0, 'capacity must be positive');
+    if (capacity < 1) {
+      throw ArgumentError.value(capacity, 'capacity', 'must be at least 1');
+    }
   }
 
   final int capacity;
@@ -39,9 +41,12 @@ class LruCache<K, V> {
     return entry.value;
   }
 
+  /// Insert via [ifAbsent] only when [key] is absent (or expired). An
+  /// explicitly cached `null` value counts as present.
   V putIfAbsent(K key, V Function() ifAbsent) {
-    final existing = get(key);
-    if (existing != null) return existing;
+    if (contains(key)) {
+      return get(key) as V;
+    }
     final value = ifAbsent();
     set(key, value);
     return value;

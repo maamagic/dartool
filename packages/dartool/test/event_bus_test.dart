@@ -75,5 +75,18 @@ void main() {
       bus.emit(_LoggedIn('nobody listening'));
       expect(bus.count<_LoggedIn>(), 0);
     });
+
+    test('emit dispatches by runtime type, not static type', () {
+      final bus = EventBus();
+      var logins = 0;
+      var objects = 0;
+      bus.on<_LoggedIn>((e) => logins++);
+      bus.on<Object>((e) => objects++);
+      // emit through a supertype-typed reference
+      final Object event = _LoggedIn('runtime');
+      bus.emit(event);
+      expect(logins, 1);
+      expect(objects, 0);
+    });
   });
 }

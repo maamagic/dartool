@@ -34,13 +34,16 @@ class EventBus {
     _subscribers.clear();
   }
 
-  /// Publish [event] synchronously to every subscriber of its runtime type.
+  /// Publish [event] synchronously to every subscriber of its **runtime**
+  /// type (not the static type [T]), so emitting a subtype through a
+  /// supertype-typed reference still reaches the matching subscribers.
   void emit<T>(T event) {
-    final list = _subscribers[T];
+    final Type type = event == null ? T : (event as Object).runtimeType;
+    final list = _subscribers[type];
     if (list == null || list.isEmpty) return;
     // snapshot to tolerate handlers that unsubscribe during emit
     for (final h in List<Function>.from(list)) {
-      (h as void Function(T))(event);
+      Function.apply(h, <Object?>[event]);
     }
   }
 

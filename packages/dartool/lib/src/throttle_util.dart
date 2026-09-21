@@ -1,4 +1,6 @@
 /// Throttle / debounce helpers  one-shot and reusable versions.
+library;
+
 import 'dart:async';
 
 /// Debounce a function: only the **last** call within [duration] fires.
@@ -66,13 +68,34 @@ class Throttler {
   void reset() => _nextAllowed = null;
 }
 
-/// One-shot convenience function: debounce a single invocation.
+/// One-shot convenience function: run [fn] after [duration] elapses.
+///
+/// This is a plain non-cancellable [Timer]; for a debouncer that resets on
+/// every call use [Debouncer].
 Timer debounce(Duration duration, void Function() fn) => Timer(duration, fn);
 
-/// Execute [fn] immediately and ensure subsequent calls within [duration] are
-/// swallowed synchronously.
+/// Last-execution timestamps keyed by the callback identity. Entries are
+/// released automatically once the closure is garbage collected.
+final Expando<DateTime> _throttleSlots = Expando<DateTime>();
+
+/// Leading-edge throttle: execute [fn] immediately and return `true` at most
+/// once per [duration] window **for the same callback instance**; calls inside
+/// the window are swallowed and return `false`.
+///
+/// Throttling state is keyed on [fn]'s identity, so reuse the same closure
+/// (or store a tear-off in a variable) across calls:
+///
+/// ```dart
+/// final handler = () => submit();
+/// ElevatedButton(onPressed: () => throttle(Duration(seconds: 1), handler));
+/// ```
 bool throttle(Duration duration, void Function() fn) {
-  // stateless throttling isn't really possible; this helper just runs [fn].
+  final now = DateTime.now();
+  final last = _throttleSlots[fn];
+  if (last != null && now.difference(last) < duration) {
+    return false;
+  }
+  _throttleSlots[fn] = now;
   fn();
   return true;
 }

@@ -6,7 +6,6 @@ extension DartoolString on String {
   bool get isBlank => StrUtil.isBlank(this);
   bool get isNotBlank => StrUtil.isNotBlank(this);
   bool get isEmptyOrNull => StrUtil.isEmpty(this);
-  bool get isNotEmpty => StrUtil.isNotEmpty(this);
   bool get isNumeric => StrUtil.isNumeric(this);
   bool get isAscii => StrUtil.isAscii(this);
   bool get isAlphabetic => StrUtil.isAlphabetic(this);

@@ -1,11 +1,18 @@
 /// Tiny leveled logger  pure Dart, zero deps, mirrors common loggers.
 ///
+/// Works on every runtime (native VM, Flutter, web) through conditional
+/// imports for the actual console sink.
+///
 /// ```dart
 /// LogUtil.d('cache hit for user 123');
 /// LogUtil.i('network', 'connected');
 /// LogUtil.e('api', 'timeout', error: e);
 /// ```
-import 'dart:io';
+library;
+
+import 'console_writer_io.dart'
+    if (dart.library.js_interop) 'console_writer_web.dart'
+    as console;
 
 enum LogLevel { verbose, debug, info, warning, error, none }
 
@@ -21,12 +28,14 @@ typedef LogFormatter =
 abstract final class LogUtil {
   LogUtil._();
 
-  static LogLevel _level = LogLevel.debug;
-  static LogLevel get level => _level;
-  static set level(LogLevel v) => _level = v;
+  /// Minimum level that is emitted.
+  static LogLevel level = LogLevel.debug;
 
   static LogFormatter _formatter = _defaultFormatter;
+
+  /// Replace the line formatter.
   static set formatter(LogFormatter f) => _formatter = f;
+
   static void resetFormatter() => _formatter = _defaultFormatter;
 
   static void v([
@@ -67,13 +76,12 @@ abstract final class LogUtil {
     Object? error,
     StackTrace? st,
   ) {
-    if (lvl.index < _level.index) return;
+    if (lvl.index < level.index) return;
     final line = _formatter(lvl, tag, msg, error, st);
-    if (lvl.index >= LogLevel.warning.index) {
-      stderr.writeln(line);
-    } else {
-      stdout.writeln(line);
-    }
+    console.consoleWriteLine(
+      line,
+      isError: lvl.index >= LogLevel.warning.index,
+    );
   }
 
   static String _defaultFormatter(

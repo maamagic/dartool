@@ -6,8 +6,6 @@ extension DartoolIterable<T> on Iterable<T> {
   Set<T> toSetOrEmpty() => CollectionUtil.toSet(this);
   String joinToString({String separator = ','}) =>
       CollectionUtil.joinToString(this, separator: separator);
-  bool get isEmpty => CollectionUtil.isEmpty(this);
-  bool get isNotEmpty => CollectionUtil.isNotEmpty(this);
   int countWhere(bool Function(T) predicate) =>
       CollectionUtil.countWhere(this, predicate);
   bool all(bool Function(T) predicate) => CollectionUtil.all(this, predicate);
@@ -52,11 +50,14 @@ class NumExt {
   }
 
   static T _sum<T extends num>(Iterable<T> values) {
-    T total = 0 as T;
+    num total = 0;
     for (final v in values) {
-      total = (total + v) as T;
+      total += v;
     }
-    return total;
+    if (total == 0 && values is Iterable<double>) {
+      return 0.0 as T;
+    }
+    return total as T;
   }
 
   static double _average(Iterable<num> values) {

@@ -22,7 +22,7 @@ export 'src/extensions/map_ext.dart';
 export 'src/extensions/num_ext.dart';
 export 'src/extensions/string_ext.dart';
 export 'src/id_util.dart';
-export 'src/io_util.dart';
+export 'src/io_util_web.dart' if (dart.library.io) 'src/io_util.dart';
 export 'src/list_util.dart';
 export 'src/json_util.dart';
 export 'src/log_util.dart';

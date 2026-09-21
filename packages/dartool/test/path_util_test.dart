@@ -53,4 +53,30 @@ void main() {
   test('separator matches platform', () {
     expect(PathUtil.separator, Platform.isWindows ? r'\' : '/');
   });
+
+  group('PathUtil dotfiles / windows drives', () {
+    test('dotfiles have no extension', () {
+      expect(PathUtil.extension('.bashrc'), '');
+      expect(PathUtil.extension('/home/user/.bashrc'), '');
+      expect(PathUtil.extension('.config.gz'), 'gz');
+    });
+
+    test('windows drive prefix is a root segment', () {
+      expect(PathUtil.split(r'C:\Users\a\b.txt'), [
+        'C:',
+        'Users',
+        'a',
+        'b.txt',
+      ]);
+      expect(PathUtil.split('C:/Users/a'), ['C:', 'Users', 'a']);
+      expect(PathUtil.baseName(r'C:\Users\a\b.txt'), 'b.txt');
+      expect(PathUtil.dirName(r'C:\Users\a\b.txt'), 'C:/Users/a');
+      expect(PathUtil.dirName('C:/foo'), 'C:/');
+    });
+
+    test('normalize understands drive prefixes and backslashes', () {
+      expect(PathUtil.normalize(r'C:\a\..\b'), 'C:/b');
+      expect(PathUtil.normalize(r'C:\a\\b'), 'C:/a/b');
+    });
+  });
 }

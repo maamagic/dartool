@@ -61,6 +61,44 @@ void main() {
       c.clear();
       expect(c.isEmpty, isTrue);
     });
+
+    test('invalid capacity throws ArgumentError', () {
+      expect(() => LruCache<String, int>(capacity: 0), throwsArgumentError);
+      expect(() => LruCache<String, int>(capacity: -2), throwsArgumentError);
+    });
+  });
+
+  group('LruCache nullable values', () {
+    test('putIfAbsent respects an explicitly cached null', () {
+      final c = LruCache<String, int?>(capacity: 2);
+      var calls = 0;
+      c.set('a', null);
+      expect(c.get('a'), isNull);
+      expect(c.contains('a'), isTrue);
+      final v = c.putIfAbsent('a', () {
+        calls++;
+        return 42;
+      });
+      expect(v, isNull);
+      expect(calls, 0);
+    });
+
+    test('putIfAbsent inserts null when absent and keeps it', () {
+      final c = LruCache<String, int?>(capacity: 2);
+      var calls = 0;
+      final v = c.putIfAbsent('a', () {
+        calls++;
+        return null;
+      });
+      expect(v, isNull);
+      expect(calls, 1);
+      c.putIfAbsent('a', () {
+        calls++;
+        return 1;
+      });
+      expect(calls, 1);
+      expect(c.contains('a'), isTrue);
+    });
   });
 
   group('LruCache with TTL', () {

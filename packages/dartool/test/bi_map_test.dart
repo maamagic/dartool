@@ -52,5 +52,35 @@ void main() {
       expect(m.isEmpty, isTrue);
       expect(m.inverse, isEmpty);
     });
+
+    test('null value is a real mapping both directions', () {
+      final m = BiMap<String, int?>();
+      m['a'] = null;
+      m['b'] = 2;
+      expect(m['a'], isNull);
+      expect(m.containsKey('a'), isTrue);
+      expect(m.inverse[null], 'a');
+      expect(m.containsValue(null), isTrue);
+      expect(m.length, 2);
+    });
+
+    test('removing a null-valued key cleans the inverse too', () {
+      final m = BiMap<String, int?>();
+      m['a'] = null;
+      m['b'] = null; // null is unique: replaces key 'a'
+      expect(m.containsKey('a'), isFalse);
+      expect(m.inverse[null], 'b');
+      m.remove('b');
+      expect(m.containsValue(null), isFalse);
+      expect(m.inverse.containsKey(null), isFalse);
+    });
+
+    test('removeValue works for null values', () {
+      final m = BiMap<String, int?>();
+      m['a'] = null;
+      m.removeValue(null);
+      expect(m.containsKey('a'), isFalse);
+      expect(m.isEmpty, isTrue);
+    });
   });
 }

@@ -13,7 +13,9 @@ void main() {
       final d = TimerUtil.measure(() {
         // small busy loop; we just verify it doesn't throw
         var s = 0;
-        for (var i = 0; i < 1000; i++) s += i;
+        for (var i = 0; i < 1000; i++) {
+          s += i;
+        }
         expect(s, greaterThan(0));
       });
       expect(d, isA<Duration>());

@@ -21,10 +21,26 @@ void main() {
     test('toBool', () {
       expect(ConvertUtil.toBool('true'), isTrue);
       expect(ConvertUtil.toBool(1), isTrue);
-      expect(ConvertUtil.toBool(''), isFalse);
       expect(ConvertUtil.toBool(0), isFalse);
       expect(ConvertUtil.toBool('maybe'), isNull);
       expect(ConvertUtil.toBool('maybe', fallback: false), isFalse);
+    });
+
+    test('toBool Chinese and pinyin tokens', () {
+      expect(ConvertUtil.toBool('shi'), isTrue);
+      expect(ConvertUtil.toBool('是'), isTrue);
+      expect(ConvertUtil.toBool('对'), isTrue);
+      expect(ConvertUtil.toBool('fou'), isFalse);
+      expect(ConvertUtil.toBool('否'), isFalse);
+      expect(ConvertUtil.toBool('错'), isFalse);
+      expect(ConvertUtil.toBool(' TRUE '), isTrue);
+    });
+
+    test('toBool empty and null fall back', () {
+      expect(ConvertUtil.toBool(''), isNull);
+      expect(ConvertUtil.toBool('', fallback: true), isTrue);
+      expect(ConvertUtil.toBool(null), isNull);
+      expect(ConvertUtil.toBool(null, fallback: false), isFalse);
     });
 
     test('toStringVal', () {

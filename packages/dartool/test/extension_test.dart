@@ -53,6 +53,15 @@ void main() {
       expect(<int>[].average(), 0.0);
     });
 
+    test('double iterable sum (regression: 0 as T crash)', () {
+      final doubles = [1.5, 2.5];
+      expect(doubles.sum(), 4.0);
+      expect(doubles.sum(), isA<double>());
+      final empty = <double>[];
+      expect(empty.sum(), 0.0);
+      expect(empty.sum(), isA<double>());
+    });
+
     test('list chunk / windowed', () {
       expect([1, 2, 3, 4, 5].chunk(2), [
         [1, 2],

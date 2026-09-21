@@ -123,12 +123,18 @@ abstract final class CollectionUtil {
   // ---------------------------------------------------------------------------
 
   /// Sum of numeric elements extracted from each item via [numOf].
+  ///
+  /// Supports both `int` and `double` result types; an empty iterable yields
+  /// `0` for `int` / `num` and `0.0` for `double`.
   static N sumOf<T, N extends num>(Iterable<T> iter, N Function(T) numOf) {
-    N total = 0 as N;
+    num total = 0;
     for (final e in iter) {
-      total = (total + numOf(e)) as N;
+      total += numOf(e);
     }
-    return total;
+    if (total == 0 && <N>[] is List<double>) {
+      return 0.0 as N;
+    }
+    return total as N;
   }
 
   /// Average of numeric elements extracted from each item via [numOf].

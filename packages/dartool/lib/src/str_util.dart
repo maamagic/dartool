@@ -152,8 +152,13 @@ abstract final class StrUtil {
   /// trailing characters.
   ///
   /// Example: `hide('13812345678', 3, 4)` ?`138****5678`.
+  /// If [str] is too short to keep both sides it is returned unchanged so no
+  /// information is lost.
   static String hide(String str, int left, int right, {String mask = '****'}) {
-    if (str.length <= left + right) return mask;
+    if (left < 0 || right < 0) {
+      throw ArgumentError('left and right must be non-negative');
+    }
+    if (str.length <= left + right) return str;
     return str.substring(0, left) + mask + str.substring(str.length - right);
   }
 
@@ -168,24 +173,21 @@ abstract final class StrUtil {
     return str.runes.every((r) => r >= 0x20 && r <= 0x7E);
   }
 
-  /// Whether every rune of [str] is a Unicode letter (alphabetic).
-  static bool isAlphabetic(String? str) {
-    if (str == null || str.isEmpty) return false;
-    return str.runes.every((r) => _isLetter(r));
-  }
+  static final RegExp _alphabeticRe = RegExp(r'^\p{L}+$', unicode: true);
+  static final RegExp _alphanumericRe = RegExp(
+    r'^[\p{L}\p{N}]+$',
+    unicode: true,
+  );
 
-  /// Whether every rune of [str] is a Unicode letter or decimal digit.
-  static bool isAlphanumeric(String? str) {
-    if (str == null || str.isEmpty) return false;
-    return str.runes.every((r) => _isLetter(r) || (r >= 0x30 && r <= 0x39));
-  }
+  /// Whether every rune of [str] is a Unicode letter (alphabetic), including
+  /// CJK characters such as Chinese.
+  static bool isAlphabetic(String? str) =>
+      str != null && str.isNotEmpty && _alphabeticRe.hasMatch(str);
 
-  static bool _isLetter(int r) {
-    // A-Z, a-z, plus Latin-1 supplement letters.
-    return (r >= 0x41 && r <= 0x5A) ||
-        (r >= 0x61 && r <= 0x7A) ||
-        (r >= 0xC0 && r <= 0xFF && r != 0xD7 && r != 0xF7);
-  }
+  /// Whether every rune of [str] is a Unicode letter or decimal digit,
+  /// including CJK characters and non-ASCII digits.
+  static bool isAlphanumeric(String? str) =>
+      str != null && str.isNotEmpty && _alphanumericRe.hasMatch(str);
 
   // ---------------------------------------------------------------------------
   // StartsWith / endsWith (case-insensitive)
@@ -257,8 +259,9 @@ abstract final class StrUtil {
   /// Remove [suffix] from the end of [str] if present.
   static String removeSuffix(String str, String suffix) {
     if (suffix.isEmpty) return str;
-    if (str.endsWith(suffix))
+    if (str.endsWith(suffix)) {
       return str.substring(0, str.length - suffix.length);
+    }
     return str;
   }
 

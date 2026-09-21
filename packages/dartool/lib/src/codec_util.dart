@@ -1,6 +1,8 @@
 /// Hexadecimal and Base64 encoding / decoding.
 ///
 /// Hex is zero-dep; Base64 wraps `dart:convert` with a few convenience APIs.
+library;
+
 import 'dart:convert' show base64, utf8;
 
 class HexUtil {

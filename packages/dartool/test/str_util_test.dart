@@ -70,6 +70,17 @@ void main() {
       expect(StrUtil.containsIgnoreCase('Hello World', 'hello'), isTrue);
       expect(StrUtil.equalsIgnoreCase('AbC', 'aBc'), isTrue);
     });
+
+    test('hide keeps the original string when too short', () {
+      // previously the visible prefix/suffix were replaced by the mask,
+      // destroying data
+      expect(StrUtil.hide('12345', 3, 4), '12345');
+      expect(StrUtil.hide('12345678', 3, 4), '123****5678');
+      expect(StrUtil.hide('abcd', 0, 2), '****cd');
+      expect(StrUtil.hide('ab', 0, 0), '****');
+      expect(() => StrUtil.hide('abc', -1, 1), throwsArgumentError);
+      expect(() => StrUtil.hide('abc', 1, -1), throwsArgumentError);
+    });
   });
 
   group('StrUtil character-type checks', () {
@@ -84,6 +95,14 @@ void main() {
       expect(StrUtil.isAlphabetic('Hello123'), isFalse);
       expect(StrUtil.isAlphanumeric('Hello123'), isTrue);
       expect(StrUtil.isAlphanumeric('Hello 123'), isFalse);
+    });
+
+    test('isAlphabetic / isAlphanumeric support CJK letters', () {
+      expect(StrUtil.isAlphabetic('中文'), isTrue);
+      expect(StrUtil.isAlphabetic('你好世界'), isTrue);
+      expect(StrUtil.isAlphabetic('中文1'), isFalse);
+      expect(StrUtil.isAlphanumeric('中文123'), isTrue);
+      expect(StrUtil.isAlphanumeric('café'), isTrue);
     });
   });
 

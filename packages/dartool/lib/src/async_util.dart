@@ -42,11 +42,14 @@ class Mutex {
 }
 
 class Semaphore {
-  Semaphore(int permits) : _permits = permits {
-    assert(permits > 0, 'permits must be positive');
+  Semaphore(int permits) : _permits = permits, _maxPermits = permits {
+    if (permits < 1) {
+      throw ArgumentError.value(permits, 'permits', 'must be at least 1');
+    }
   }
 
   int _permits;
+  final int _maxPermits;
   final _queue = <_Waiter>[];
 
   /// Acquire one permit, blocking until available. Returns a release handle
@@ -62,10 +65,16 @@ class Semaphore {
   }
 
   /// Release one permit.
+  ///
+  /// Throws [StateError] when called more times than there are permits (i.e.
+  /// releasing without a matching [acquire]), which would otherwise inflate
+  /// the permit count past the configured limit.
   void release() {
     if (_queue.isNotEmpty) {
       final w = _queue.removeAt(0);
       w.complete();
+    } else if (_permits >= _maxPermits) {
+      throw StateError('Semaphore released too many times');
     } else {
       _permits++;
     }

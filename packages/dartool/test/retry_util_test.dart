@@ -109,5 +109,37 @@ void main() {
       );
       expect(delays[1], greaterThan(delays[0]));
     });
+
+    test('computeDelay never overflows on huge attempt counts', () {
+      const base = Duration(microseconds: 1);
+      for (final attempt in [1, 2, 10, 31, 62, 63, 64, 70, 1000]) {
+        final d = RetryUtil.computeDelay(base, attempt, Backoff.exponential);
+        expect(d.inMicroseconds, greaterThanOrEqualTo(0));
+      }
+      // shift is capped at 62: attempts 63+ all equal the 2^62 multiplier.
+      // Build 2^62 by doubling (a literal/shift would wrap or fail to
+      // represent exactly on the web).
+      var pow2_62 = 1;
+      for (var i = 0; i < 62; i++) {
+        pow2_62 *= 2;
+      }
+      final d62 = RetryUtil.computeDelay(base, 63, Backoff.exponential);
+      final d1000 = RetryUtil.computeDelay(base, 1000, Backoff.exponential);
+      expect(d1000, d62);
+      // On the VM the exact 2^62 product is kept; on the web the saturation
+      // guard rounds down to the safe-integer ceiling (both are hundreds of
+      // thousands of years — an effective infinite delay).
+      expect(d62.inMicroseconds, anyOf(pow2_62, 9007199254740991));
+
+      // linear multiplication saturates at the cross-platform ceiling
+      // (2^53 - 1) instead of wrapping to a negative value
+      final hugeLinear = RetryUtil.computeDelay(
+        const Duration(microseconds: 1000000),
+        1 << 30,
+        Backoff.linear,
+      );
+      expect(hugeLinear.inMicroseconds, greaterThan(0));
+      expect(hugeLinear.inMicroseconds, lessThanOrEqualTo(9007199254740991));
+    });
   });
 }

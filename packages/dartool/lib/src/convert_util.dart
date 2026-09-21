@@ -41,18 +41,23 @@ abstract final class ConvertUtil {
     return fallback;
   }
 
-  /// Convert [v] to `bool`. Returns [fallback] on failure.
+  /// Convert [v] to `bool`. Returns [fallback] on failure (including `null`,
+  /// empty strings and unrecognized values).
   ///
-  /// Truthy strings: `true/1/yes/y/shi`. Also accepts the Chinese character
-  /// for "yes". Falsy strings: `false/0/no/n/fou`. Also accepts the Chinese
-  /// character for "no".
+  /// Truthy strings: `true`, `1`, `yes`, `y`, `shi`, `是`, `对`.
+  /// Falsy strings: `false`, `0`, `no`, `n`, `fou`, `否`, `错`.
   static bool? toBool(dynamic v, {bool? fallback}) {
     if (v is bool) return v;
     if (v is num) return v != 0;
     if (v is String) {
       final t = v.trim().toLowerCase();
-      if (const {'true', '1', 'yes', 'y'}.contains(t)) return true;
-      if (const {'false', '0', 'no', 'n', ''}.contains(t)) return false;
+      if (t.isEmpty) return fallback;
+      if (const {'true', '1', 'yes', 'y', 'shi', '是', '对'}.contains(t)) {
+        return true;
+      }
+      if (const {'false', '0', 'no', 'n', 'fou', '否', '错'}.contains(t)) {
+        return false;
+      }
       return fallback;
     }
     return fallback;

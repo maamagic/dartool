@@ -9,9 +9,15 @@ abstract final class RegexUtil {
   /// Mainland China mobile: `1[3-9]xxxxxxxxx`.
   static final RegExp phoneCn = RegExp(r'^1[3-9]\d{9}$');
 
-  /// URL (http / https).
+  /// URL (http / https). Accepts `localhost`, dotted hosts and an optional
+  /// port, path and query.
   static final RegExp url = RegExp(
-    r'^https?://[\w\-]+(\.[\w\-]+)+([/\w\-._~:/?#\[\]@!$&()*+,;=%]*)?$',
+    r'^https?://'
+    r'(localhost|'
+    r'[a-zA-Z\d]([a-zA-Z\d-]*[a-zA-Z\d])?'
+    r'(\.[a-zA-Z\d]([a-zA-Z\d-]*[a-zA-Z\d])?)*)'
+    r'(:\d{1,5})?'
+    r'([/?#][\w\-._~:/?#\[\]@!$&()*+,;=%]*)?$',
   );
 
   /// Mainland China ID card (18 digits; last char may be X/x).

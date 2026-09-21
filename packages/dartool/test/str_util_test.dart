@@ -3,14 +3,14 @@ import 'package:test/test.dart';
 
 void main() {
   group('StrUtil.isBlank / isEmpty', () {
-    test('isBlank 识别 null/空/纯空白', () {
+    test('isBlank 识别 null/空字符串', () {
       expect(StrUtil.isBlank(null), isTrue);
       expect(StrUtil.isBlank(''), isTrue);
       expect(StrUtil.isBlank('   '), isTrue);
       expect(StrUtil.isBlank('abc'), isFalse);
     });
 
-    test('isEmpty 不忽略空白', () {
+    test('isEmpty 不忽略空字符串', () {
       expect(StrUtil.isEmpty(null), isTrue);
       expect(StrUtil.isEmpty(''), isTrue);
       expect(StrUtil.isEmpty('   '), isFalse);
@@ -132,6 +132,31 @@ void main() {
       expect(StrUtil.ifBlank(null, 'default'), 'default');
       expect(StrUtil.ifBlank('   ', 'default'), 'default');
       expect(StrUtil.ifBlank('ok', 'default'), 'ok');
+    });
+  });
+
+  group('padCenter / chunked / hideEmail / hidePhone', () {
+    test('padCenter', () {
+      expect(StrUtil.padCenter('ab', 5), ' ab  ');
+      expect(StrUtil.padCenter('ab', 5, '-'), '-ab--');
+      expect(StrUtil.padCenter('hello', 3), 'hello');
+    });
+
+    test('chunked', () {
+      expect(StrUtil.chunked('abcdefg', 3), ['abc', 'def', 'g']);
+      expect(StrUtil.chunked('abc', 5), ['abc']);
+      expect(StrUtil.chunked('', 2), isEmpty);
+      expect(StrUtil.chunked('abc', 0), isEmpty);
+    });
+
+    test('hideEmail', () {
+      expect(StrUtil.hideEmail('test@example.com'), 't****@example.com');
+      expect(StrUtil.hideEmail('a@b.com'), 'a@b.com');
+    });
+
+    test('hidePhone', () {
+      expect(StrUtil.hidePhone('13812345678'), '138****5678');
+      expect(StrUtil.hidePhone('123'), '123');
     });
   });
 }

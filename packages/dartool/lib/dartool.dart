@@ -1,5 +1,6 @@
 library;
 
+export 'src/bi_map.dart';
 export 'src/collection_util.dart';
 export 'src/codec_util.dart';
 export 'src/color_util.dart';

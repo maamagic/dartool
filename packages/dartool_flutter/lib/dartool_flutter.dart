@@ -1,4 +1,4 @@
-/// dartool_flutter â€?Flutter-specific extensions built on top of dartool.
+/// dartool_flutter éˆ¥?Flutter-specific extensions built on top of dartool.
 ///
 /// Provides platform detection, logging and widget shorthands. Combine with
 /// the pure-Dart `dartool` package:
@@ -19,3 +19,4 @@ export 'src/log_util.dart';
 export 'src/platform_util.dart';
 export 'src/widget_util.dart';
 export 'src/extensions/widget_ext.dart';
+export 'src/extensions/context_ext.dart';

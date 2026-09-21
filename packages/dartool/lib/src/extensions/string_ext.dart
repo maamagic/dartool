@@ -1,3 +1,4 @@
+import '../regex_util.dart';
 import '../str_util.dart';
 
 /// Extension APIs mirroring [StrUtil].
@@ -46,6 +47,13 @@ extension DartoolString on String {
   List<String> splitAndTrim(String pattern, {bool dropEmpty = true}) =>
       StrUtil.splitAndTrim(this, pattern, dropEmpty: dropEmpty);
   int countChar(String char) => StrUtil.countChar(this, char);
+
+  bool get isEmail => RegexUtil.isEmail(this);
+  bool get isPhone => RegexUtil.isPhone(this);
+  bool get isUrl => RegexUtil.isUrl(this);
+  bool get isIdCard => RegexUtil.isIdCard(this);
+  bool get isIpv4 => RegexUtil.isIpv4(this);
+  bool get isChinese => RegexUtil.isChinese(this);
 }
 
 /// Null-aware convenience on nullable strings.

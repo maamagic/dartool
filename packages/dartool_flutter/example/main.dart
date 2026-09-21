@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:dartool/dartool.dart';
+import 'package:dartool_flutter/dartool_flutter.dart';
 
 void main() {
   PlatformUtil.isWeb;

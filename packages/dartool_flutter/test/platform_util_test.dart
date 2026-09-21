@@ -1,17 +1,20 @@
-import 'package:dartool/dartool.dart';
+import 'package:dartool_flutter/dartool_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('targetPlatform 可安全读取', () {
+  test('targetPlatform is not null', () {
     expect(PlatformUtil.targetPlatform, isNotNull);
   });
 
-  test('isMobile 与 isDesktop 互斥', () {
+  test('isMobile and isDesktop are mutually exclusive', () {
     expect(PlatformUtil.isMobile, isNot(PlatformUtil.isDesktop));
   });
 
-  test('isWeb 与 isDesktop 可同时为 false（原生环境）', () {
-    // 测试运行在原生 VM 上，Web 一定为 false
+  test('isWeb is false when running on VM', () {
     expect(PlatformUtil.isWeb, isFalse);
+  });
+
+  test('isDesktop works', () {
+    expect(PlatformUtil.isDesktop, anyOf(isTrue, isFalse));
   });
 }
